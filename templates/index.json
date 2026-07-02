@@ -1,14 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero",
       "settings": {
+        "image": "shopify://shop_images/ca_usa_banner.png",
         "eyebrow": "2024 ELITE SERIES",
         "heading_line1": "CHAMPION'S CHOICE",
         "heading_line2": "BEYOND PERFORMANCE.",
         "subtext": "Elevate your game with the exact equipment used by the world's leading cricketers. Engineered for precision, built for power.",
         "cta_primary_text": "SHOP THE COLLECTION",
+        "cta_primary_url": "",
         "cta_secondary_text": "VIEW LIFESTYLE",
+        "cta_secondary_url": "",
         "show_stats": true,
         "stat_1_value": "15K+",
         "stat_1_label": "PROFESSIONAL PLAYERS",
@@ -20,47 +32,58 @@
     },
     "trending-categories": {
       "type": "trending-categories",
-      "settings": {
-        "title": "TRENDING CATEGORIES",
-        "view_all_text": "VIEW ALL GEAR"
-      },
       "blocks": {
         "cat-bats": {
           "type": "category",
           "settings": {
             "name": "BATS",
-            "sub": "ELITE WILLOW"
+            "sub": "ELITE WILLOW",
+            "url": ""
           }
         },
         "cat-balls": {
           "type": "category",
           "settings": {
             "name": "BALLS",
-            "sub": "PRACTICE & MATCH"
+            "sub": "PRACTICE & MATCH",
+            "url": ""
           }
         },
         "cat-protection": {
           "type": "category",
           "settings": {
             "name": "PROTECTION",
-            "sub": "SOFT LEATHER"
+            "sub": "SOFT LEATHER",
+            "url": ""
           }
         },
         "cat-kitbags": {
           "type": "category",
           "settings": {
             "name": "KITBAGS",
-            "sub": "HEAVY DUTY"
+            "sub": "HEAVY DUTY",
+            "url": ""
           }
         }
       },
-      "block_order": ["cat-bats", "cat-balls", "cat-protection", "cat-kitbags"]
+      "block_order": [
+        "cat-bats",
+        "cat-balls",
+        "cat-protection",
+        "cat-kitbags"
+      ],
+      "settings": {
+        "title": "TRENDING CATEGORIES",
+        "view_all_url": "",
+        "view_all_text": "VIEW ALL GEAR"
+      }
     },
     "bestsellers": {
       "type": "bestsellers",
       "settings": {
         "title": "SEASON BESTSELLERS",
         "subtitle": "Most trusted gear by the CW community.",
+        "collection": "",
         "products_count": 4
       }
     },
@@ -70,18 +93,12 @@
         "eyebrow": "ESTABLISHED 2024",
         "title": "THE PAVILION CLUB",
         "description": "Where the game meets the grind. Our premium lifestyle collection designed for the modern cricketer's off-field journey. Sustainable fabrics, technical fits, iconic style.",
-        "cta_text": "EXPLORE LIFESTYLE"
+        "cta_text": "EXPLORE LIFESTYLE",
+        "cta_url": ""
       }
     },
     "brand-story": {
       "type": "brand-story",
-      "settings": {
-        "years_number": "25",
-        "years_label": "YEARS OF\nTRUST",
-        "headline": "CRAFTING EXCELLENCE",
-        "description": "Cricket Warehouse USA was born from a singular obsession: to provide American cricketers with the same caliber of equipment found in the legendary pavilions of London and Mumbai.",
-        "cta_text": "READ OUR FULL STORY"
-      },
       "blocks": {
         "feature-1": {
           "type": "feature",
@@ -100,23 +117,71 @@
           }
         }
       },
-      "block_order": ["feature-1", "feature-2"]
+      "block_order": [
+        "feature-1",
+        "feature-2"
+      ],
+      "settings": {
+        "years_number": "25",
+        "years_label": "YEARS OF\nTRUST",
+        "headline": "CRAFTING EXCELLENCE",
+        "description": "Cricket Warehouse USA was born from a singular obsession: to provide American cricketers with the same caliber of equipment found in the legendary pavilions of London and Mumbai.",
+        "cta_text": "READ OUR FULL STORY",
+        "cta_url": ""
+      }
     },
     "instagram-grid": {
       "type": "instagram-grid",
+      "blocks": {
+        "ig-1": {
+          "type": "image",
+          "settings": {
+            "alt": ""
+          }
+        },
+        "ig-2": {
+          "type": "image",
+          "settings": {
+            "alt": ""
+          }
+        },
+        "ig-3": {
+          "type": "image",
+          "settings": {
+            "alt": ""
+          }
+        },
+        "ig-4": {
+          "type": "image",
+          "settings": {
+            "alt": ""
+          }
+        },
+        "ig-5": {
+          "type": "image",
+          "settings": {
+            "alt": ""
+          }
+        },
+        "ig-6": {
+          "type": "image",
+          "settings": {
+            "alt": ""
+          }
+        }
+      },
+      "block_order": [
+        "ig-1",
+        "ig-2",
+        "ig-3",
+        "ig-4",
+        "ig-5",
+        "ig-6"
+      ],
       "settings": {
         "hashtag": "#CWUSA_COMMUNITY",
         "title": "JOIN THE SQUAD ON INSTAGRAM"
-      },
-      "blocks": {
-        "ig-1": { "type": "image", "settings": {} },
-        "ig-2": { "type": "image", "settings": {} },
-        "ig-3": { "type": "image", "settings": {} },
-        "ig-4": { "type": "image", "settings": {} },
-        "ig-5": { "type": "image", "settings": {} },
-        "ig-6": { "type": "image", "settings": {} }
-      },
-      "block_order": ["ig-1", "ig-2", "ig-3", "ig-4", "ig-5", "ig-6"]
+      }
     },
     "newsletter": {
       "type": "newsletter",
@@ -125,6 +190,7 @@
         "description": "Subscribe to get first access to limited edition bats, exclusive Crimson Club events, and pro-tips directly in your inbox.",
         "placeholder": "ENTER YOUR EMAIL",
         "submit_text": "SUBSCRIBE",
+        "success_message": "THANKS FOR SUBSCRIBING!",
         "disclaimer": "BY SUBSCRIBING YOU AGREE TO OUR PRIVACY POLICY AND TERMS OF SERVICE."
       }
     }
