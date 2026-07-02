@@ -1,0 +1,140 @@
+<header class="site-header" role="banner">
+  <div class="site-header__inner">
+
+    <!-- Left: Hamburger + Logo + Desktop Nav -->
+    <div class="site-header__left">
+      <button class="site-header__menu-btn" type="button" data-menu-open aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+
+      <a class="site-header__logo" href="{{ routes.root_url }}">
+        <span class="site-header__logo-full">{{ section.settings.logo_text | default: shop.name }}</span>
+        <span class="site-header__logo-short">{{ section.settings.logo_short | default: 'CWA' }}</span>
+      </a>
+
+      {%- if linklists[section.settings.menu].links.size > 0 -%}
+        <nav class="site-header__nav" role="navigation" aria-label="Main navigation">
+          {%- for link in linklists[section.settings.menu].links -%}
+            <a
+              class="site-header__nav-link{% if link.active %} is-active{% endif %}"
+              href="{{ link.url }}"
+              {% if link.active %}aria-current="page"{% endif %}
+            >
+              {{ link.title }}
+            </a>
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+    </div>
+
+    <!-- Right: Search + Icons -->
+    <div class="site-header__right">
+      {%- if section.settings.show_search -%}
+        <form class="site-header__search" action="{{ routes.search_url }}" method="get" role="search">
+          <span class="material-symbols-outlined" style="color:var(--color-stadium-white);font-size:20px;" aria-hidden="true">search</span>
+          <input
+            type="search"
+            name="q"
+            placeholder="Search gear..."
+            aria-label="Search"
+            autocomplete="off"
+          >
+        </form>
+      {%- endif -%}
+
+      <div style="display:flex;gap:16px;align-items:center;">
+        <a class="site-header__icon-btn" href="{{ routes.account_url }}" aria-label="Account">
+          <span class="material-symbols-outlined" aria-hidden="true">person</span>
+        </a>
+
+        <a class="site-header__icon-btn site-header__cart" href="{{ routes.cart_url }}" aria-label="Cart ({{ cart.item_count }} items)">
+          <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
+          <span class="site-header__cart-badge js-cart-count"{% if cart.item_count == 0 %} style="display:none"{% endif %}>
+            {{ cart.item_count }}
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Menu Drawer -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true" aria-label="Mobile navigation">
+  <button class="mobile-menu__overlay" type="button" data-menu-close aria-label="Close menu"></button>
+  <div class="mobile-menu__drawer">
+    <div class="mobile-menu__header">
+      <a class="mobile-menu__logo" href="{{ routes.root_url }}">{{ section.settings.logo_short | default: 'CWA' }}</a>
+      <button class="mobile-menu__close" type="button" data-menu-close aria-label="Close menu">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+      </button>
+    </div>
+
+    <nav class="mobile-menu__nav" aria-label="Mobile menu">
+      {%- if linklists[section.settings.menu].links.size > 0 -%}
+        {%- for link in linklists[section.settings.menu].links -%}
+          <a
+            class="mobile-menu__nav-link{% if link.active %} is-active{% endif %}"
+            href="{{ link.url }}"
+            {% if link.active %}aria-current="page"{% endif %}
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">{{ link.title | downcase | replace: ' ', '_' | replace: 'home', 'home' }}</span>
+            <span>{{ link.title }}</span>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
+    </nav>
+  </div>
+</div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav" aria-label="Mobile bottom navigation">
+  <a class="bottom-nav__item{% if request.page_type == 'index' %} is-active{% endif %}" href="{{ routes.root_url }}">
+    <span class="material-symbols-outlined" style="font-size:22px;" aria-hidden="true">home</span>
+    <span>Home</span>
+  </a>
+  <a class="bottom-nav__item{% if request.page_type == 'collection' %} is-active{% endif %}" href="{{ routes.collections_url }}">
+    <span class="material-symbols-outlined" style="font-size:22px;" aria-hidden="true">storefront</span>
+    <span>Shop</span>
+  </a>
+  <a class="bottom-nav__item{% if request.page_type == 'cart' %} is-active{% endif %}" href="{{ routes.cart_url }}">
+    <span class="material-symbols-outlined" style="font-size:22px;" aria-hidden="true">shopping_cart</span>
+    <span>Cart</span>
+  </a>
+  <a class="bottom-nav__item{% if request.page_type == 'customers/account' %} is-active{% endif %}" href="{{ routes.account_url }}">
+    <span class="material-symbols-outlined" style="font-size:22px;" aria-hidden="true">person</span>
+    <span>My Account</span>
+  </a>
+</nav>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text (full)",
+      "default": "CRICKET WAREHOUSE USA",
+      "info": "Shown on desktop. Keep it short and uppercase."
+    },
+    {
+      "type": "text",
+      "id": "logo_short",
+      "label": "Logo text (short, mobile)",
+      "default": "CWA"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Navigation menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search bar",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

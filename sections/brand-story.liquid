@@ -1,0 +1,164 @@
+<section class="section-brand-story">
+  <div class="section-brand-story__grid">
+
+    <!-- Image Column -->
+    <div class="section-brand-story__image-col">
+      <div class="section-brand-story__image-wrap">
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 800
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.image.alt | default: section.settings.headline | escape
+          }}
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+      <div class="section-brand-story__decor-border"></div>
+      {%- if section.settings.years_number != blank -%}
+        <div class="section-brand-story__years-badge" aria-hidden="true">
+          <p class="section-brand-story__years-num">{{ section.settings.years_number }}</p>
+          <p class="section-brand-story__years-label">{{ section.settings.years_label | newline_to_br }}</p>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Text Column -->
+    <div>
+      <h2 class="section-brand-story__headline">{{ section.settings.headline }}</h2>
+      {%- if section.settings.description != blank -%}
+        <p class="section-brand-story__desc">{{ section.settings.description }}</p>
+      {%- endif -%}
+
+      <div class="section-brand-story__features">
+        {%- for block in section.blocks -%}
+          <div class="section-brand-story__feature" {{ block.shopify_attributes }}>
+            <span class="material-symbols-outlined section-brand-story__feature-icon" aria-hidden="true">
+              {{- block.settings.icon | default: 'verified' -}}
+            </span>
+            <div>
+              <h4 class="section-brand-story__feature-title">{{ block.settings.title }}</h4>
+              <p class="section-brand-story__feature-desc">{{ block.settings.description }}</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.cta_text != blank -%}
+        <a class="section-brand-story__cta" href="{{ section.settings.cta_url }}">
+          {{ section.settings.cta_text }}
+        </a>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Story image"
+    },
+    {
+      "type": "text",
+      "id": "years_number",
+      "label": "Years badge number",
+      "default": "25"
+    },
+    {
+      "type": "text",
+      "id": "years_label",
+      "label": "Years badge label",
+      "default": "YEARS OF\nTRUST"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Heading",
+      "default": "CRAFTING EXCELLENCE"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Cricket Warehouse USA was born from a singular obsession: to provide American cricketers with the same caliber of equipment found in the legendary pavilions of London and Mumbai."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "READ OUR FULL STORY"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Material icon name",
+          "default": "verified_user",
+          "info": "Use a Material Symbols name, e.g. verified_user, precision_manufacturing"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "AUTHENTICITY GUARANTEED"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Every product is sourced directly from manufacturers and verified by our in-house pros."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Story",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "verified_user",
+            "title": "AUTHENTICITY GUARANTEED",
+            "description": "Every product is sourced directly from manufacturers and verified by our in-house pros."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "precision_manufacturing",
+            "title": "EXPERT CURATION",
+            "description": "We don't just sell gear; we test it. Only the top 5% of tested willow makes it to our Warehouse."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

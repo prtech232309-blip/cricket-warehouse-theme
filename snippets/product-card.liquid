@@ -1,0 +1,102 @@
+{%- comment -%}
+  Renders a product card.
+  Usage: {% render 'product-card', product: product %}
+{%- endcomment -%}
+
+{%- assign first_available_variant = product.variants | where: 'available', true | first -%}
+{%- if first_available_variant == blank -%}
+  {%- assign first_available_variant = product.variants.first -%}
+{%- endif -%}
+
+{%- assign on_sale = false -%}
+{%- if product.compare_at_price > product.price -%}
+  {%- assign on_sale = true -%}
+{%- endif -%}
+
+{%- assign is_new = false -%}
+{%- if product.tags contains 'new-arrival' or product.tags contains 'new' -%}
+  {%- assign is_new = true -%}
+{%- endif -%}
+
+{%- assign is_bestseller = false -%}
+{%- if product.tags contains 'bestseller' -%}
+  {%- assign is_bestseller = true -%}
+{%- endif -%}
+
+<div class="product-card">
+  <!-- Badges -->
+  <div class="product-card__badges">
+    {%- if is_bestseller -%}
+      <span class="product-card__badge product-card__badge--bestseller">BESTSELLER</span>
+    {%- endif -%}
+    {%- if on_sale -%}
+      <span class="product-card__badge product-card__badge--sale">SALE</span>
+    {%- elsif is_new -%}
+      <span class="product-card__badge product-card__badge--new">NEW ARRIVAL</span>
+    {%- endif -%}
+  </div>
+
+  <!-- Wishlist -->
+  <button class="product-card__wishlist" type="button" aria-label="Add {{ product.title | escape }} to wishlist">
+    <span class="material-symbols-outlined" aria-hidden="true">favorite</span>
+  </button>
+
+  <!-- Image -->
+  <a href="{{ product.url }}" class="product-card__image-wrap" aria-label="{{ product.title | escape }}">
+    {%- if product.featured_image != blank -%}
+      {{
+        product.featured_image
+        | image_url: width: 600
+        | image_tag:
+          loading: 'lazy',
+          alt: product.featured_image.alt | default: product.title | escape
+      }}
+    {%- else -%}
+      {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+
+    <!-- Quick Add -->
+    {%- if first_available_variant.available -%}
+      <button
+        class="product-card__quick-add"
+        type="button"
+        data-quick-add
+        data-variant-id="{{ first_available_variant.id }}"
+        aria-label="Quick add {{ product.title | escape }} to cart"
+      >
+        <span class="material-symbols-outlined" style="font-size:20px;" aria-hidden="true">add_shopping_cart</span>
+        QUICK ADD
+      </button>
+    {%- else -%}
+      <div class="product-card__quick-add" style="background-color:var(--color-outline);cursor:default;">
+        SOLD OUT
+      </div>
+    {%- endif -%}
+  </a>
+
+  <!-- Info -->
+  <div class="product-card__info">
+    <div class="product-card__title-row">
+      <h3 class="product-card__title">
+        <a href="{{ product.url }}" style="text-decoration:none;color:inherit;">{{ product.title }}</a>
+      </h3>
+      <div class="product-card__price-wrap">
+        {%- if on_sale -%}
+          <span class="product-card__price product-card__price--sale">
+            {{ product.price | money }}
+          </span>
+          <span class="product-card__price-compare">
+            {{ product.compare_at_price | money }}
+          </span>
+        {%- else -%}
+          <span class="product-card__price">{{ product.price | money }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- if product.metafields.custom.short_desc != blank -%}
+      <p class="product-card__desc">{{ product.metafields.custom.short_desc }}</p>
+    {%- elsif product.description != blank -%}
+      <p class="product-card__desc">{{ product.description | strip_html | truncate: 60 }}</p>
+    {%- endif -%}
+  </div>
+</div>

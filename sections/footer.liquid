@@ -1,0 +1,188 @@
+<footer class="site-footer" role="contentinfo">
+  <div class="site-footer__grid">
+
+    <!-- Brand Column -->
+    <div>
+      <a class="site-footer__brand-name" href="{{ routes.root_url }}">
+        {{ section.settings.brand_name | default: shop.name }}
+      </a>
+      <p class="site-footer__brand-desc">{{ section.settings.brand_desc }}</p>
+      <div class="site-footer__social">
+        {%- if section.settings.social_instagram != blank -%}
+          <a class="site-footer__social-link" href="{{ section.settings.social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram">
+            <span class="material-symbols-outlined" aria-hidden="true">share</span>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.social_facebook != blank -%}
+          <a class="site-footer__social-link" href="{{ section.settings.social_facebook }}" target="_blank" rel="noopener" aria-label="Facebook">
+            <span class="material-symbols-outlined" aria-hidden="true">public</span>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <!-- Shop Links -->
+    <div>
+      <h4 class="site-footer__col-title">{{ section.settings.col_shop_title | default: 'Shop' }}</h4>
+      {%- if linklists[section.settings.col_shop_menu].links.size > 0 -%}
+        <ul class="site-footer__links">
+          {%- for link in linklists[section.settings.col_shop_menu].links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- else -%}
+        <ul class="site-footer__links">
+          <li><a href="/collections/bats">Cricket Bats</a></li>
+          <li><a href="/collections/pads">Batting Pads</a></li>
+          <li><a href="/collections/protection">Protection Gear</a></li>
+          <li><a href="/collections/helmets">Helmets</a></li>
+          <li><a href="/collections/footwear">Footwear</a></li>
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <!-- Support Links -->
+    <div>
+      <h4 class="site-footer__col-title">{{ section.settings.col_support_title | default: 'Support' }}</h4>
+      {%- if linklists[section.settings.col_support_menu].links.size > 0 -%}
+        <ul class="site-footer__links">
+          {%- for link in linklists[section.settings.col_support_menu].links -%}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- else -%}
+        <ul class="site-footer__links">
+          <li><a href="/pages/contact">Contact Us</a></li>
+          <li><a href="/pages/order-tracking">Order Tracking</a></li>
+          <li><a href="/pages/shipping-returns">Shipping &amp; Returns</a></li>
+          <li><a href="/pages/size-guide">Size Guide</a></li>
+          <li><a href="/policies/privacy-policy">Privacy Policy</a></li>
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <!-- Location -->
+    <div>
+      <h4 class="site-footer__col-title">{{ section.settings.col_location_title | default: 'Location' }}</h4>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        {%- if section.settings.address_title != blank or section.settings.address_text != blank -%}
+          <div>
+            <span class="site-footer__location-title">{{ section.settings.address_title }}</span>
+            <p class="site-footer__location-text">{{ section.settings.address_text | newline_to_br }}</p>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.email != blank -%}
+          <div>
+            <span class="site-footer__location-title">Email</span>
+            <p class="site-footer__location-text">{{ section.settings.email }}</p>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="site-footer__bottom">
+    <p class="site-footer__copyright">
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All Rights Reserved.
+    </p>
+    <div class="site-footer__payment" aria-label="Accepted payment methods">
+      <span class="material-symbols-outlined" aria-hidden="true">payments</span>
+      <span class="material-symbols-outlined" aria-hidden="true">credit_card</span>
+      <span class="material-symbols-outlined" aria-hidden="true">account_balance_wallet</span>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "CRICKET WAREHOUSE USA"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_desc",
+      "label": "Brand description",
+      "default": "The ultimate destination for premium cricket equipment and apparel in the United States. Engineered for champions."
+    },
+    {
+      "type": "text",
+      "id": "social_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "text",
+      "id": "social_facebook",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "header",
+      "content": "Shop Column"
+    },
+    {
+      "type": "text",
+      "id": "col_shop_title",
+      "label": "Column title",
+      "default": "SHOP"
+    },
+    {
+      "type": "link_list",
+      "id": "col_shop_menu",
+      "label": "Shop menu"
+    },
+    {
+      "type": "header",
+      "content": "Support Column"
+    },
+    {
+      "type": "text",
+      "id": "col_support_title",
+      "label": "Column title",
+      "default": "SUPPORT"
+    },
+    {
+      "type": "link_list",
+      "id": "col_support_menu",
+      "label": "Support menu"
+    },
+    {
+      "type": "header",
+      "content": "Location Column"
+    },
+    {
+      "type": "text",
+      "id": "col_location_title",
+      "label": "Column title",
+      "default": "LOCATION"
+    },
+    {
+      "type": "text",
+      "id": "address_title",
+      "label": "Store name",
+      "default": "New Jersey Flagship"
+    },
+    {
+      "type": "textarea",
+      "id": "address_text",
+      "label": "Address",
+      "default": "440 Cricket Lane, Suite 100\nEdison, NJ 08817"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email",
+      "default": "support@cricketwarehouseusa.com"
+    }
+  ]
+}
+{% endschema %}

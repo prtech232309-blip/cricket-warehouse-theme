@@ -1,0 +1,134 @@
+<section class="section-pavilion">
+  <!-- Background -->
+  <div class="section-pavilion__bg">
+    {%- if section.settings.bg_image != blank -%}
+      {{
+        section.settings.bg_image
+        | image_url: width: 1920
+        | image_tag:
+          loading: 'lazy',
+          alt: section.settings.bg_image.alt | escape
+      }}
+    {%- else -%}
+      <div style="width:100%;height:100%;background-color:var(--color-deep-navy);"></div>
+    {%- endif -%}
+    <div class="section-pavilion__bg-gradient"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="section-pavilion__inner">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="section-pavilion__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="section-pavilion__title">{{ section.settings.title }}</h2>
+      {%- if section.settings.description != blank -%}
+        <p class="section-pavilion__desc">{{ section.settings.description }}</p>
+      {%- endif -%}
+      {%- if section.settings.cta_text != blank -%}
+        <a class="btn btn-white" href="{{ section.settings.cta_url }}">
+          {{ section.settings.cta_text }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    <!-- Side Images (desktop only) -->
+    <div class="section-pavilion__images">
+      <div class="section-pavilion__image-col">
+        {%- if section.settings.image_left != blank -%}
+          {{
+            section.settings.image_left
+            | image_url: width: 600
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.image_left.alt | escape
+          }}
+        {%- else -%}
+          <div style="width:100%;height:100%;background-color:rgba(255,255,255,0.1);border-radius:var(--radius-sm);"></div>
+        {%- endif -%}
+      </div>
+      <div class="section-pavilion__image-col">
+        {%- if section.settings.image_right != blank -%}
+          {{
+            section.settings.image_right
+            | image_url: width: 600
+            | image_tag:
+              loading: 'lazy',
+              alt: section.settings.image_right.alt | escape
+          }}
+        {%- else -%}
+          <div style="width:100%;height:100%;background-color:rgba(255,255,255,0.08);border-radius:var(--radius-sm);"></div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Pavilion Club",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "ESTABLISHED 2024"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "THE PAVILION CLUB"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Where the game meets the grind. Our premium lifestyle collection designed for the modern cricketer's off-field journey. Sustainable fabrics, technical fits, iconic style."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "EXPLORE LIFESTYLE"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Side images (desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_left",
+      "label": "Left image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_right",
+      "label": "Right image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pavilion Club"
+    }
+  ]
+}
+{% endschema %}

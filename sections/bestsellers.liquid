@@ -1,0 +1,92 @@
+<section class="section-bestsellers">
+  <div class="section-bestsellers__inner">
+    <div class="section-bestsellers__header">
+      <div>
+        <h2 class="section-bestsellers__title">{{ section.settings.title }}</h2>
+        {%- if section.settings.subtitle != blank -%}
+          <p class="section-bestsellers__subtitle">{{ section.settings.subtitle }}</p>
+        {%- endif -%}
+      </div>
+      <div class="section-bestsellers__nav" aria-label="Scroll navigation" aria-hidden="true">
+        <button class="section-bestsellers__nav-btn" type="button" aria-label="Previous">
+          <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+        </button>
+        <button class="section-bestsellers__nav-btn" type="button" aria-label="Next">
+          <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-bestsellers__grid">
+      {%- if section.settings.collection != blank -%}
+        {%- assign featured_collection = collections[section.settings.collection] -%}
+        {%- if featured_collection != blank and featured_collection.products.size > 0 -%}
+          {%- for product in featured_collection.products limit: section.settings.products_count -%}
+            {% render 'product-card', product: product %}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..section.settings.products_count) -%}
+            {% render 'product-card-placeholder', index: i %}
+          {%- endfor -%}
+        {%- endif -%}
+      {%- else -%}
+        {%- comment -%} No collection selected — show placeholder cards {%- endcomment -%}
+        {%- for i in (1..section.settings.products_count) -%}
+          <div class="product-card">
+            <div class="product-card__image-wrap">
+              {{ 'product-apparel-' | append: i | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__title-row">
+                <h3 class="product-card__title">Product Name</h3>
+                <div class="product-card__price-wrap">
+                  <span class="product-card__price">$0.00</span>
+                </div>
+              </div>
+              <p class="product-card__desc">Select a collection above to display products.</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bestsellers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section heading",
+      "default": "SEASON BESTSELLERS"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtext",
+      "default": "Most trusted gear by the CW community."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection to display"
+    },
+    {
+      "type": "range",
+      "id": "products_count",
+      "label": "Number of products",
+      "min": 2,
+      "max": 8,
+      "step": 2,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bestsellers"
+    }
+  ]
+}
+{% endschema %}

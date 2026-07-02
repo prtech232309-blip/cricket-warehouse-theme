@@ -1,0 +1,58 @@
+{%- if section.settings.show_bar -%}
+<div class="announcement-bar" role="region" aria-label="Announcement">
+  <div class="announcement-bar__track">
+    {%- comment -%} Duplicate items so marquee loops seamlessly on mobile {%- endcomment -%}
+    {%- for i in (1..2) -%}
+      <span class="announcement-bar__item">
+        <span class="material-symbols-outlined" aria-hidden="true">stars</span>
+        {{ section.settings.text_1 }}
+      </span>
+      <span class="announcement-bar__item announcement-bar__item--desktop-only">
+        <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+        {{ section.settings.text_2 }}
+      </span>
+      <span class="announcement-bar__item">
+        <span class="material-symbols-outlined" aria-hidden="true">verified</span>
+        {{ section.settings.text_3 }}
+      </span>
+    {%- endfor -%}
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_bar",
+      "label": "Show announcement bar",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Message 1",
+      "default": "JOIN THE CRIMSON CLUB FOR EXCLUSIVE EARLY ACCESS TO 2024 DROPS"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Message 2 (desktop center, hidden on mobile)",
+      "default": "FREE EXPEDITED SHIPPING ON ORDERS OVER $150"
+    },
+    {
+      "type": "text",
+      "id": "text_3",
+      "label": "Message 3",
+      "default": "USA'S #1 CRICKET EQUIPMENT SPECIALIST"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar"
+    }
+  ]
+}
+{% endschema %}

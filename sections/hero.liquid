@@ -1,0 +1,200 @@
+<section class="section-hero">
+  <!-- Background Image -->
+  <div class="section-hero__image-wrap">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 1920
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          alt: section.settings.image.alt | escape
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+    <div class="section-hero__gradient"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="section-hero__content">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="section-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    <h1 class="section-hero__headline">
+      {{ section.settings.heading_line1 }}
+      {%- if section.settings.heading_line2 != blank -%}
+        <span class="section-hero__headline-accent">{{ section.settings.heading_line2 }}</span>
+      {%- endif -%}
+    </h1>
+
+    {%- if section.settings.subtext != blank -%}
+      <p class="section-hero__subtext">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+
+    <div class="section-hero__actions">
+      {%- if section.settings.cta_primary_text != blank -%}
+        <a class="btn btn-primary" href="{{ section.settings.cta_primary_url }}">
+          {{ section.settings.cta_primary_text }}
+          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.cta_secondary_text != blank -%}
+        <a class="btn btn-outline" href="{{ section.settings.cta_secondary_url }}">
+          {{ section.settings.cta_secondary_text }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <!-- Stats Overlay -->
+  {%- if section.settings.show_stats -%}
+    <div class="section-hero__stats" aria-hidden="true">
+      {%- if section.settings.stat_1_value != blank -%}
+        <div class="section-hero__stat">
+          <span class="section-hero__stat-value">{{ section.settings.stat_1_value }}</span>
+          <span class="section-hero__stat-label">{{ section.settings.stat_1_label }}</span>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.stat_2_value != blank -%}
+        <div class="section-hero__stat">
+          <span class="section-hero__stat-value">{{ section.settings.stat_2_value }}</span>
+          <span class="section-hero__stat-label">{{ section.settings.stat_2_label }}</span>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.stat_3_value != blank -%}
+        <div class="section-hero__stat">
+          <span class="section-hero__stat-value">{{ section.settings.stat_3_value }}</span>
+          <span class="section-hero__stat-label">{{ section.settings.stat_3_label }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero background image"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "2024 ELITE SERIES"
+    },
+    {
+      "type": "text",
+      "id": "heading_line1",
+      "label": "Headline line 1",
+      "default": "CHAMPION'S CHOICE"
+    },
+    {
+      "type": "text",
+      "id": "heading_line2",
+      "label": "Headline line 2 (red accent)",
+      "default": "BEYOND PERFORMANCE."
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Elevate your game with the exact equipment used by the world's leading cricketers. Engineered for precision, built for power."
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_text",
+      "label": "Button text",
+      "default": "SHOP THE COLLECTION"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_url",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_text",
+      "label": "Button text",
+      "default": "VIEW LIFESTYLE"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_url",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Stats (shown bottom-right on large screens)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show stats",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "stat_1_value",
+      "label": "Stat 1 value",
+      "default": "15K+"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Stat 1 label",
+      "default": "PROFESSIONAL PLAYERS"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_value",
+      "label": "Stat 2 value",
+      "default": "100%"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Stat 2 label",
+      "default": "ENGLISH WILLOW"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_value",
+      "label": "Stat 3 value",
+      "default": "USA"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Stat 3 label",
+      "default": "EXPRESS SHIPPING"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero"
+    }
+  ]
+}
+{% endschema %}

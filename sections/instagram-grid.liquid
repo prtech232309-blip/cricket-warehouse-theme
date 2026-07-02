@@ -1,0 +1,81 @@
+<section class="section-instagram">
+  <div class="section-instagram__inner">
+    <div class="section-instagram__header">
+      <span class="section-instagram__hashtag">{{ section.settings.hashtag }}</span>
+      <h2 class="section-instagram__title">{{ section.settings.title }}</h2>
+    </div>
+
+    <div class="section-instagram__grid">
+      {%- for block in section.blocks -%}
+        <div class="instagram-item" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 600
+              | image_tag:
+                loading: 'lazy',
+                alt: block.settings.alt | default: section.settings.hashtag | escape
+            }}
+          {%- else -%}
+            {{ 'lifestyle-' | append: forloop.index | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+          <div class="instagram-item__overlay" aria-hidden="true">
+            <span class="material-symbols-outlined" style="font-size:32px;" aria-hidden="true">favorite</span>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Instagram Grid",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "hashtag",
+      "label": "Hashtag label",
+      "default": "#CWUSA_COMMUNITY"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section heading",
+      "default": "JOIN THE SQUAD ON INSTAGRAM"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Photo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Grid",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

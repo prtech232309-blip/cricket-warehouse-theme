@@ -1,0 +1,141 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "2024 ELITE SERIES",
+        "heading_line1": "CHAMPION'S CHOICE",
+        "heading_line2": "BEYOND PERFORMANCE.",
+        "subtext": "Elevate your game with the exact equipment used by the world's leading cricketers. Engineered for precision, built for power.",
+        "cta_primary_text": "SHOP THE COLLECTION",
+        "cta_secondary_text": "VIEW LIFESTYLE",
+        "show_stats": true,
+        "stat_1_value": "15K+",
+        "stat_1_label": "PROFESSIONAL PLAYERS",
+        "stat_2_value": "100%",
+        "stat_2_label": "ENGLISH WILLOW",
+        "stat_3_value": "USA",
+        "stat_3_label": "EXPRESS SHIPPING"
+      }
+    },
+    "trending-categories": {
+      "type": "trending-categories",
+      "settings": {
+        "title": "TRENDING CATEGORIES",
+        "view_all_text": "VIEW ALL GEAR"
+      },
+      "blocks": {
+        "cat-bats": {
+          "type": "category",
+          "settings": {
+            "name": "BATS",
+            "sub": "ELITE WILLOW"
+          }
+        },
+        "cat-balls": {
+          "type": "category",
+          "settings": {
+            "name": "BALLS",
+            "sub": "PRACTICE & MATCH"
+          }
+        },
+        "cat-protection": {
+          "type": "category",
+          "settings": {
+            "name": "PROTECTION",
+            "sub": "SOFT LEATHER"
+          }
+        },
+        "cat-kitbags": {
+          "type": "category",
+          "settings": {
+            "name": "KITBAGS",
+            "sub": "HEAVY DUTY"
+          }
+        }
+      },
+      "block_order": ["cat-bats", "cat-balls", "cat-protection", "cat-kitbags"]
+    },
+    "bestsellers": {
+      "type": "bestsellers",
+      "settings": {
+        "title": "SEASON BESTSELLERS",
+        "subtitle": "Most trusted gear by the CW community.",
+        "products_count": 4
+      }
+    },
+    "pavilion-club": {
+      "type": "pavilion-club",
+      "settings": {
+        "eyebrow": "ESTABLISHED 2024",
+        "title": "THE PAVILION CLUB",
+        "description": "Where the game meets the grind. Our premium lifestyle collection designed for the modern cricketer's off-field journey. Sustainable fabrics, technical fits, iconic style.",
+        "cta_text": "EXPLORE LIFESTYLE"
+      }
+    },
+    "brand-story": {
+      "type": "brand-story",
+      "settings": {
+        "years_number": "25",
+        "years_label": "YEARS OF\nTRUST",
+        "headline": "CRAFTING EXCELLENCE",
+        "description": "Cricket Warehouse USA was born from a singular obsession: to provide American cricketers with the same caliber of equipment found in the legendary pavilions of London and Mumbai.",
+        "cta_text": "READ OUR FULL STORY"
+      },
+      "blocks": {
+        "feature-1": {
+          "type": "feature",
+          "settings": {
+            "icon": "verified_user",
+            "title": "AUTHENTICITY GUARANTEED",
+            "description": "Every product is sourced directly from manufacturers and verified by our in-house pros."
+          }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": {
+            "icon": "precision_manufacturing",
+            "title": "EXPERT CURATION",
+            "description": "We don't just sell gear; we test it. Only the top 5% of tested willow makes it to our Warehouse."
+          }
+        }
+      },
+      "block_order": ["feature-1", "feature-2"]
+    },
+    "instagram-grid": {
+      "type": "instagram-grid",
+      "settings": {
+        "hashtag": "#CWUSA_COMMUNITY",
+        "title": "JOIN THE SQUAD ON INSTAGRAM"
+      },
+      "blocks": {
+        "ig-1": { "type": "image", "settings": {} },
+        "ig-2": { "type": "image", "settings": {} },
+        "ig-3": { "type": "image", "settings": {} },
+        "ig-4": { "type": "image", "settings": {} },
+        "ig-5": { "type": "image", "settings": {} },
+        "ig-6": { "type": "image", "settings": {} }
+      },
+      "block_order": ["ig-1", "ig-2", "ig-3", "ig-4", "ig-5", "ig-6"]
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "title": "NEVER MISS A DROP",
+        "description": "Subscribe to get first access to limited edition bats, exclusive Crimson Club events, and pro-tips directly in your inbox.",
+        "placeholder": "ENTER YOUR EMAIL",
+        "submit_text": "SUBSCRIBE",
+        "disclaimer": "BY SUBSCRIBING YOU AGREE TO OUR PRIVACY POLICY AND TERMS OF SERVICE."
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "trending-categories",
+    "bestsellers",
+    "pavilion-club",
+    "brand-story",
+    "instagram-grid",
+    "newsletter"
+  ]
+}

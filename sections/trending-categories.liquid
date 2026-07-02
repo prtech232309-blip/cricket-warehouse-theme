@@ -1,0 +1,134 @@
+<section class="section-categories">
+  <div class="section-categories__header">
+    <div class="section-categories__title-wrap">
+      <h2 class="section-categories__title">{{ section.settings.title }}</h2>
+      <span class="section-categories__title-accent"></span>
+    </div>
+    {%- if section.settings.view_all_url != blank -%}
+      <a class="section-categories__view-all" href="{{ section.settings.view_all_url }}">
+        {{ section.settings.view_all_text | default: 'VIEW ALL GEAR' }}
+        <span class="material-symbols-outlined" aria-hidden="true">trending_flat</span>
+      </a>
+    {%- endif -%}
+  </div>
+
+  <div class="section-categories__grid">
+    {%- for block in section.blocks -%}
+      <a
+        class="category-card"
+        href="{{ block.settings.url | default: '#' }}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="category-card__image-wrap">
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 400
+              | image_tag:
+                loading: 'lazy',
+                alt: block.settings.name | escape
+            }}
+          {%- else -%}
+            {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+          <div class="category-card__overlay"></div>
+        </div>
+        <h3 class="category-card__name">{{ block.settings.name }}</h3>
+        {%- if block.settings.sub != blank -%}
+          <p class="category-card__sub">{{ block.settings.sub }}</p>
+        {%- endif -%}
+      </a>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trending Categories",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section heading",
+      "default": "TRENDING CATEGORIES"
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": "View All link URL"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All link text",
+      "default": "VIEW ALL GEAR"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Category image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Category name",
+          "default": "BATS"
+        },
+        {
+          "type": "text",
+          "id": "sub",
+          "label": "Sub label",
+          "default": "ELITE WILLOW"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Category link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trending Categories",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "name": "BATS",
+            "sub": "ELITE WILLOW"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "name": "BALLS",
+            "sub": "PRACTICE & MATCH"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "name": "PROTECTION",
+            "sub": "SOFT LEATHER"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "name": "KITBAGS",
+            "sub": "HEAVY DUTY"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

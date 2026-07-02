@@ -1,0 +1,97 @@
+<section class="section-newsletter">
+  <div class="section-newsletter__decor" aria-hidden="true"></div>
+  <div class="section-newsletter__inner">
+    <h2 class="section-newsletter__title">{{ section.settings.title }}</h2>
+    {%- if section.settings.description != blank -%}
+      <p class="section-newsletter__desc">{{ section.settings.description }}</p>
+    {%- endif -%}
+
+    {%- form 'customer', id: 'newsletter-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+
+      {%- if form.posted_successfully? -%}
+        <p class="section-newsletter__success">
+          <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+          {{ section.settings.success_message | default: 'THANKS FOR SUBSCRIBING!' }}
+        </p>
+      {%- else -%}
+        {%- if form.errors -%}
+          <p style="color:var(--color-sport-red);font-family:var(--font-mono);font-size:12px;margin-bottom:16px;text-transform:uppercase;letter-spacing:0.1em;">
+            {{ form.errors | default_errors }}
+          </p>
+        {%- endif -%}
+
+        <div class="section-newsletter__form">
+          <input
+            class="section-newsletter__input"
+            type="email"
+            name="contact[email]"
+            id="newsletter-email"
+            placeholder="{{ section.settings.placeholder }}"
+            required
+            autocorrect="off"
+            autocapitalize="off"
+            aria-label="{{ section.settings.placeholder }}"
+            aria-required="true"
+          >
+          <button class="section-newsletter__submit" type="submit">
+            {{ section.settings.submit_text }}
+          </button>
+        </div>
+      {%- endif -%}
+    {%- endform -%}
+
+    {%- if section.settings.disclaimer != blank -%}
+      <p class="section-newsletter__disclaimer">{{ section.settings.disclaimer }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "NEVER MISS A DROP"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Subscribe to get first access to limited edition bats, exclusive Crimson Club events, and pro-tips directly in your inbox."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "ENTER YOUR EMAIL"
+    },
+    {
+      "type": "text",
+      "id": "submit_text",
+      "label": "Button text",
+      "default": "SUBSCRIBE"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "THANKS FOR SUBSCRIBING!"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer text",
+      "default": "BY SUBSCRIBING YOU AGREE TO OUR PRIVACY POLICY AND TERMS OF SERVICE."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}

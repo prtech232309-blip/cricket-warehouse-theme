@@ -1,0 +1,24 @@
+{
+  "general": {
+    "search": {
+      "placeholder": "Search gear..."
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable",
+      "quick_add": "Quick Add"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Your Equipment Bag",
+      "empty": "Your cart is empty",
+      "checkout": "Checkout",
+      "subtotal": "Subtotal",
+      "remove": "Remove"
+    }
+  }
+}

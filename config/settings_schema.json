@@ -1,0 +1,20 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Cricket Warehouse USA",
+    "theme_version": "1.0.0",
+    "theme_author": "Cricket Warehouse USA",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Branding",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image"
+      }
+    ]
+  }
+]
