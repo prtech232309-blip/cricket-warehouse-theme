@@ -1,0 +1,286 @@
+<div class="contact-page">
+
+  <!-- Page Header -->
+  <div class="contact-page__header">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="contact-page__eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h1 class="contact-page__title">{{ section.settings.title }}</h1>
+    {%- if section.settings.subtitle != blank -%}
+      <p class="contact-page__subtitle">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+  </div>
+
+  <!-- Two-column layout: Form + Info -->
+  <div class="contact-page__body">
+
+    <!-- Contact Form -->
+    <div class="contact-page__form-col">
+      {%- form 'contact', id: 'ContactForm' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="contact-form__success" role="alert">
+            <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+            <div>
+              <strong>Message sent!</strong>
+              <p>We'll get back to you within 24 hours.</p>
+            </div>
+          </div>
+        {%- else -%}
+
+          {%- if form.errors -%}
+            <div class="contact-form__errors" role="alert">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="contact-form__row is-2col">
+            <div class="contact-form__group">
+              <label class="contact-form__label" for="ContactFirstName">First Name</label>
+              <input
+                class="contact-form__input"
+                type="text"
+                id="ContactFirstName"
+                name="contact[first_name]"
+                value="{{ form.first_name }}"
+                autocomplete="given-name"
+              >
+            </div>
+            <div class="contact-form__group">
+              <label class="contact-form__label" for="ContactLastName">Last Name</label>
+              <input
+                class="contact-form__input"
+                type="text"
+                id="ContactLastName"
+                name="contact[last_name]"
+                value="{{ form.last_name }}"
+                autocomplete="family-name"
+              >
+            </div>
+          </div>
+
+          <div class="contact-form__group">
+            <label class="contact-form__label" for="ContactEmail">Email Address <span aria-hidden="true">*</span></label>
+            <input
+              class="contact-form__input"
+              type="email"
+              id="ContactEmail"
+              name="contact[email]"
+              value="{{ form.email }}"
+              required
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="contact-form__group">
+            <label class="contact-form__label" for="ContactPhone">Phone Number</label>
+            <input
+              class="contact-form__input"
+              type="tel"
+              id="ContactPhone"
+              name="contact[phone]"
+              value="{{ form.phone }}"
+              autocomplete="tel"
+            >
+          </div>
+
+          <div class="contact-form__group">
+            <label class="contact-form__label" for="ContactSubject">Subject</label>
+            <select class="contact-form__input contact-form__select" id="ContactSubject" name="contact[subject]">
+              <option value="">Select a topic…</option>
+              <option value="Order Enquiry">Order Enquiry</option>
+              <option value="Product Question">Product Question</option>
+              <option value="Returns & Exchanges">Returns &amp; Exchanges</option>
+              <option value="Sponsorship">Sponsorship</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="contact-form__group">
+            <label class="contact-form__label" for="ContactBody">Message <span aria-hidden="true">*</span></label>
+            <textarea
+              class="contact-form__textarea"
+              id="ContactBody"
+              name="contact[body]"
+              required
+              rows="6"
+              placeholder="Tell us how we can help…"
+            >{{ form.body }}</textarea>
+          </div>
+
+          <button class="contact-form__submit btn btn-primary" type="submit">
+            <span class="material-symbols-outlined" aria-hidden="true">send</span>
+            {{ section.settings.submit_text | default: 'SEND MESSAGE' }}
+          </button>
+
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    <!-- Contact Info -->
+    <div class="contact-page__info-col">
+
+      {%- if section.settings.info_heading != blank -%}
+        <h2 class="contact-page__info-heading">{{ section.settings.info_heading }}</h2>
+      {%- endif -%}
+
+      {%- if section.settings.info_intro != blank -%}
+        <p class="contact-page__info-intro">{{ section.settings.info_intro }}</p>
+      {%- endif -%}
+
+      <div class="contact-page__info-list">
+
+        {%- if section.settings.address != blank -%}
+          <div class="contact-page__info-item">
+            <span class="contact-page__info-icon material-symbols-outlined" aria-hidden="true">location_on</span>
+            <div>
+              <span class="contact-page__info-label">Address</span>
+              <span class="contact-page__info-value">{{ section.settings.address | newline_to_br }}</span>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.phone != blank -%}
+          <div class="contact-page__info-item">
+            <span class="contact-page__info-icon material-symbols-outlined" aria-hidden="true">call</span>
+            <div>
+              <span class="contact-page__info-label">Phone</span>
+              <a class="contact-page__info-value contact-page__info-link" href="tel:{{ section.settings.phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' }}">{{ section.settings.phone }}</a>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.email != blank -%}
+          <div class="contact-page__info-item">
+            <span class="contact-page__info-icon material-symbols-outlined" aria-hidden="true">mail</span>
+            <div>
+              <span class="contact-page__info-label">Email</span>
+              <a class="contact-page__info-value contact-page__info-link" href="mailto:{{ section.settings.email }}">{{ section.settings.email }}</a>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.hours != blank -%}
+          <div class="contact-page__info-item">
+            <span class="contact-page__info-icon material-symbols-outlined" aria-hidden="true">schedule</span>
+            <div>
+              <span class="contact-page__info-label">Business Hours</span>
+              <span class="contact-page__info-value">{{ section.settings.hours | newline_to_br }}</span>
+            </div>
+          </div>
+        {%- endif -%}
+
+      </div>
+
+      <!-- Response time callout -->
+      <div class="contact-page__callout">
+        <span class="material-symbols-outlined" aria-hidden="true">support_agent</span>
+        <div>
+          <strong>{{ section.settings.callout_heading | default: 'Fast Response' }}</strong>
+          <p>{{ section.settings.callout_text | default: 'Our cricket specialists typically reply within 24 hours on business days.' }}</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Page Header"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "GET IN TOUCH"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page title",
+      "default": "CONTACT US"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Have a question about gear, an order, or just want to talk cricket? We're here for it."
+    },
+    {
+      "type": "header",
+      "content": "Contact Form"
+    },
+    {
+      "type": "text",
+      "id": "submit_text",
+      "label": "Submit button text",
+      "default": "SEND MESSAGE"
+    },
+    {
+      "type": "header",
+      "content": "Contact Information"
+    },
+    {
+      "type": "text",
+      "id": "info_heading",
+      "label": "Info column heading",
+      "default": "REACH US DIRECTLY"
+    },
+    {
+      "type": "textarea",
+      "id": "info_intro",
+      "label": "Info intro text",
+      "default": "Prefer to get in touch another way? Here's how to reach our team."
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address",
+      "default": "Cricket Warehouse USA\n123 Pitch Lane\nNew York, NY 10001"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone number",
+      "default": "+1 (800) 555-0199"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email address",
+      "default": "support@cricketwarehouseusa.com"
+    },
+    {
+      "type": "textarea",
+      "id": "hours",
+      "label": "Business hours",
+      "default": "Mon – Fri: 9am – 6pm EST\nSat: 10am – 4pm EST\nSun: Closed"
+    },
+    {
+      "type": "header",
+      "content": "Response Callout"
+    },
+    {
+      "type": "text",
+      "id": "callout_heading",
+      "label": "Callout heading",
+      "default": "Fast Response Guaranteed"
+    },
+    {
+      "type": "textarea",
+      "id": "callout_text",
+      "label": "Callout text",
+      "default": "Our cricket specialists typically reply within 24 hours on business days."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Page"
+    }
+  ]
+}
+{% endschema %}
