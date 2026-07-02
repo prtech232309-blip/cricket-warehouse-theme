@@ -187,13 +187,6 @@ input, select, textarea { font-family: inherit; }
   white-space: nowrap;
 }
 
-@media (min-width: 768px) {
-  .announcement-bar__track {
-    min-width: 0;
-    animation: none;
-    justify-content: center;
-  }
-}
 
 .announcement-bar__item {
   font-family: var(--font-mono);
