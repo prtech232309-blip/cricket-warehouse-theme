@@ -47,7 +47,7 @@
           <span class="material-symbols-outlined" aria-hidden="true">person</span>
         </a>
 
-        <a class="site-header__icon-btn site-header__cart" href="{{ routes.cart_url }}" aria-label="Cart ({{ cart.item_count }} items)">
+        <a class="site-header__icon-btn site-header__cart" href="{{ routes.cart_url }}" data-cart-drawer-open aria-label="Cart ({{ cart.item_count }} items)">
           <span class="material-symbols-outlined" aria-hidden="true">shopping_cart</span>
           <span class="site-header__cart-badge js-cart-count"{% if cart.item_count == 0 %} style="display:none"{% endif %}>
             {{ cart.item_count }}
