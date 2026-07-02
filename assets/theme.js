@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
   initQuickAdd();
   updateCartCount();
   initCartDrawer();
-  initEmailPopup();
   initBackToTop();
 });
 
@@ -225,44 +224,6 @@ async function refreshCartDrawer() {
 
   } catch {
     body.innerHTML = '<div class="cart-drawer__empty"><p>Could not load cart.</p></div>';
-  }
-}
-
-/* Email Popup
-   ============================================================ */
-function initEmailPopup() {
-  const overlay = document.querySelector('.email-popup-overlay');
-  if (!overlay) return;
-
-  const COOKIE_KEY = 'cwa_popup_dismissed';
-  if (document.cookie.includes(COOKIE_KEY)) return;
-
-  const open = () => overlay.classList.add('is-open');
-  const close = () => {
-    overlay.classList.remove('is-open');
-    const exp = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString();
-    document.cookie = `${COOKIE_KEY}=1; expires=${exp}; path=/`;
-  };
-
-  setTimeout(open, 4000);
-
-  overlay.querySelector('.email-popup__close')?.addEventListener('click', close);
-  overlay.querySelector('.email-popup__skip')?.addEventListener('click', close);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-
-  const form = overlay.querySelector('.email-popup__form');
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      overlay.querySelector('.email-popup__content').innerHTML = `
-        <div class="email-popup__success">
-          <span class="material-symbols-outlined">check_circle</span>
-          <h3>YOU'RE IN!</h3>
-          <p>Your discount code is on its way. Welcome to the Crimson Club!</p>
-        </div>`;
-      setTimeout(close, 2500);
-    });
   }
 }
 
