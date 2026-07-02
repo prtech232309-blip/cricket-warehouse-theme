@@ -1,0 +1,719 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign on_sale = false -%}
+{%- if current_variant.compare_at_price > current_variant.price -%}
+  {%- assign on_sale = true -%}
+{%- endif -%}
+
+<div class="product-page">
+
+  <!-- Breadcrumbs -->
+  <nav class="product-breadcrumbs" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a>
+    <span class="material-symbols-outlined" style="font-size:14px;" aria-hidden="true">chevron_right</span>
+    {%- if product.collections.size > 0 -%}
+      <a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a>
+      <span class="material-symbols-outlined" style="font-size:14px;" aria-hidden="true">chevron_right</span>
+    {%- endif -%}
+    <span>{{ product.title }}</span>
+  </nav>
+
+  <!-- Product Hero: Gallery + Info -->
+  <div class="product-hero">
+
+    <!-- Gallery -->
+    <div class="product-gallery">
+      <!-- Main Image -->
+      <div class="product-gallery__main">
+        {%- if on_sale -%}
+          <span class="product-gallery__badge">
+            {%- assign savings_pct = current_variant.compare_at_price | minus: current_variant.price | times: 100 | divided_by: current_variant.compare_at_price -%}
+            {{ savings_pct }}% OFF
+          </span>
+        {%- endif -%}
+        {%- if product.featured_image != blank -%}
+          {{
+            product.featured_image
+            | image_url: width: 900
+            | image_tag:
+              id: 'ProductMainImage',
+              loading: 'eager',
+              fetchpriority: 'high',
+              alt: product.featured_image.alt | default: product.title | escape
+          }}
+        {%- else -%}
+          {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      <!-- Thumbnails -->
+      {%- if product.images.size > 1 -%}
+        <div class="product-gallery__thumbs">
+          {%- for image in product.images limit: 6 -%}
+            <button
+              class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}"
+              data-thumb-index="{{ forloop.index0 }}"
+              data-src="{{ image | image_url: width: 900 }}"
+              aria-label="View image {{ forloop.index }}"
+              type="button"
+            >
+              {{
+                image
+                | image_url: width: 200
+                | image_tag: loading: 'lazy', alt: image.alt | default: product.title | escape
+              }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <!-- Product Info -->
+    <div class="product-info">
+      {%- if product.type != blank -%}
+        <span class="product-info__type">{{ product.type }}</span>
+      {%- endif -%}
+
+      <h1 class="product-info__title">{{ product.title }}</h1>
+
+      <div class="product-info__rating">
+        <div class="product-info__stars" aria-label="4.5 out of 5 stars">
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;" aria-hidden="true">star</span>
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;" aria-hidden="true">star</span>
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;" aria-hidden="true">star</span>
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;" aria-hidden="true">star</span>
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;" aria-hidden="true">star_half</span>
+        </div>
+        <span class="product-info__review-count">
+          <a href="#product-reviews" style="color:inherit;text-decoration:none;">({{ product.metafields.reviews.rating_count | default: '—' }} Reviews)</a>
+        </span>
+      </div>
+
+      <!-- Price Panel -->
+      <div class="product-price-panel">
+        <div class="product-price__row">
+          <span class="product-price__current js-product-price">{{ current_variant.price | money }}</span>
+          {%- if on_sale -%}
+            <span class="product-price__compare">{{ current_variant.compare_at_price | money }}</span>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.show_member_price and section.settings.member_price_label != blank -%}
+          <div class="product-price__member">
+            <span class="product-price__member-label">{{ section.settings.member_price_label }}:</span>
+            <span class="product-price__member-value" id="MemberPrice">{{ section.settings.member_price_value }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Variant Selectors -->
+      {%- unless product.has_only_default_variant -%}
+        <div class="product-options" id="ProductOptions">
+          {%- for option in product.options_with_values -%}
+            <div class="product-option">
+              <label class="product-option__label">
+                {{ option.name | upcase }}:
+                <span id="SelectedValue-{{ option.position }}">{{ option.selected_value }}</span>
+              </label>
+              <div class="product-option__values" data-option-position="{{ option.position }}">
+                {%- for value in option.values -%}
+                  {%- assign is_selected = false -%}
+                  {%- if value == option.selected_value -%}{%- assign is_selected = true -%}{%- endif -%}
+                  <button
+                    class="variant-btn{% if is_selected %} is-selected{% endif %}"
+                    type="button"
+                    data-option-value="{{ value | escape }}"
+                    data-option-position="{{ option.position }}"
+                    aria-pressed="{{ is_selected }}"
+                  >{{ value }}</button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endunless -%}
+
+      <!-- Add to Cart Form -->
+      {%- form 'product', product, id: 'ProductAddToCart', novalidate: 'novalidate' -%}
+        <input type="hidden" name="id" id="VariantId" value="{{ current_variant.id }}">
+
+        <!-- Quantity -->
+        <div class="product-qty-row">
+          <span class="product-qty-label">QTY:</span>
+          <div class="product-qty-stepper">
+            <button class="product-qty-stepper__btn" type="button" id="QtyMinus" aria-label="Decrease quantity">
+              <span class="material-symbols-outlined" aria-hidden="true">remove</span>
+            </button>
+            <input
+              class="product-qty-stepper__input"
+              type="number"
+              name="quantity"
+              id="ProductQty"
+              value="1"
+              min="1"
+              aria-label="Quantity"
+            >
+            <button class="product-qty-stepper__btn" type="button" id="QtyPlus" aria-label="Increase quantity">
+              <span class="material-symbols-outlined" aria-hidden="true">add</span>
+            </button>
+          </div>
+        </div>
+
+        {%- if current_variant.available -%}
+          <button class="product-atc-btn" type="submit" id="AddToCartBtn">
+            <span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span>
+            ADD TO CART
+          </button>
+        {%- else -%}
+          <span class="product-soldout-badge">SOLD OUT — OUT OF STOCK</span>
+        {%- endif -%}
+
+      {%- endform -%}
+
+      <!-- Buy Now -->
+      {%- if current_variant.available -%}
+        <a class="product-buy-btn" href="/cart/now?id={{ current_variant.id }}&quantity=1">BUY NOW</a>
+      {%- endif -%}
+
+      <!-- Trust Badges -->
+      <div class="product-trust">
+        <div class="product-trust__item">
+          <span class="material-symbols-outlined" aria-hidden="true">verified</span>
+          <span>{{ section.settings.badge_1 | default: '100% Authentic' }}</span>
+        </div>
+        <div class="product-trust__item">
+          <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+          <span>{{ section.settings.badge_2 | default: 'Fast US Shipping' }}</span>
+        </div>
+        <div class="product-trust__item">
+          <span class="material-symbols-outlined" aria-hidden="true">handshake</span>
+          <span>{{ section.settings.badge_3 | default: 'Pro Warranty' }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Product Tabs -->
+<div class="product-tabs-section">
+  <div class="product-tabs__nav" role="tablist">
+    <button class="product-tabs__btn is-active" role="tab" aria-selected="true" aria-controls="tab-description" data-tab="description">Description</button>
+    <button class="product-tabs__btn" role="tab" aria-selected="false" aria-controls="tab-specs" data-tab="specs">Technical Specs</button>
+    {%- if section.settings.show_reviews -%}
+      <button class="product-tabs__btn" role="tab" aria-selected="false" aria-controls="tab-reviews" data-tab="reviews" id="product-reviews">Reviews</button>
+    {%- endif -%}
+  </div>
+
+  <!-- Description Tab -->
+  <div class="product-tabs__panel is-active" id="tab-description" role="tabpanel">
+    <div class="product-desc__grid">
+      <div class="product-desc__text">
+        {%- if product.description != blank -%}
+          {{ product.description }}
+        {%- else -%}
+          <h3>CRAFTED FOR PERFORMANCE</h3>
+          <p>Premium cricket equipment designed and tested by professionals. Each piece undergoes rigorous quality control to meet the demands of competitive play at every level.</p>
+          <ul>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Professional grade materials</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Expert craftsmanship</li>
+            <li><span class="material-symbols-outlined" aria-hidden="true">check_circle</span> Tournament approved</li>
+          </ul>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.desc_image != blank -%}
+        <div class="product-desc__image">
+          {{
+            section.settings.desc_image
+            | image_url: width: 700
+            | image_tag: loading: 'lazy', alt: product.title | escape
+          }}
+        </div>
+      {%- elsif product.images.size > 1 -%}
+        <div class="product-desc__image">
+          {{
+            product.images[1]
+            | image_url: width: 700
+            | image_tag: loading: 'lazy', alt: product.images[1].alt | default: product.title | escape
+          }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <!-- Specs Tab -->
+  <div class="product-tabs__panel" id="tab-specs" role="tabpanel">
+    <div class="product-specs-wrap">
+      <table>
+        <tbody>
+          {%- if product.vendor != blank -%}
+            <tr><td>Brand</td><td>{{ product.vendor }}</td></tr>
+          {%- endif -%}
+          {%- if product.type != blank -%}
+            <tr><td>Category</td><td>{{ product.type }}</td></tr>
+          {%- endif -%}
+          {%- if current_variant.sku != blank -%}
+            <tr><td>SKU</td><td>{{ current_variant.sku }}</td></tr>
+          {%- endif -%}
+          {%- if current_variant.weight > 0 -%}
+            <tr><td>Weight</td><td>{{ current_variant.weight | weight_with_unit }}</td></tr>
+          {%- endif -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'spec_row' -%}
+              <tr class="product-specs__custom-row" {{ block.shopify_attributes }}>
+                <td>{{ block.settings.spec_label }}</td>
+                <td>{{ block.settings.spec_value }}</td>
+              </tr>
+            {%- endif -%}
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Reviews Tab -->
+  {%- if section.settings.show_reviews -%}
+    <div class="product-tabs__panel" id="tab-reviews" role="tabpanel">
+      {%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
+      {%- if review_blocks.size > 0 -%}
+        <div class="product-reviews-grid">
+          {%- for block in review_blocks -%}
+            <div class="review-card" {{ block.shopify_attributes }}>
+              <div class="review-card__header">
+                <div>
+                  <div class="review-card__stars" aria-label="{{ block.settings.rating }} stars">
+                    {%- for i in (1..5) -%}
+                      {%- if i <= block.settings.rating -%}
+                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;" aria-hidden="true">star</span>
+                      {%- else -%}
+                        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 0;" aria-hidden="true">star</span>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                  <p class="review-card__title">{{ block.settings.review_title }}</p>
+                </div>
+                <span class="review-card__date">{{ block.settings.review_date }}</span>
+              </div>
+              <p class="review-card__text">{{ block.settings.review_text }}</p>
+              <p class="review-card__author">— {{ block.settings.reviewer_name }}</p>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <div class="product-reviews-empty">
+          <p>No reviews yet. Be the first to review this product.</p>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>
+
+<!-- Related Products -->
+{%- if section.settings.show_related -%}
+  {%- assign related_collection = collections[section.settings.related_collection] -%}
+  {%- assign related_limit = section.settings.related_count | default: 4 -%}
+  {%- if related_collection != blank or product.collections.size > 0 -%}
+    {%- assign use_collection = related_collection | default: product.collections.first -%}
+    {%- if use_collection != blank -%}
+      <section class="related-products">
+        <div class="related-products__inner">
+          <div class="related-products__header">
+            <div>
+              <span class="related-products__eyebrow">{{ section.settings.related_eyebrow | default: 'PRO UPGRADE' }}</span>
+              <h2 class="related-products__title">{{ section.settings.related_heading | default: 'COMPLETE YOUR KIT' }}</h2>
+            </div>
+            <a href="{{ use_collection.url }}" class="btn btn-outline" style="font-size:14px;padding:10px 20px;">
+              VIEW ALL
+              <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;" aria-hidden="true">arrow_forward</span>
+            </a>
+          </div>
+          <div class="related-products__grid">
+            {%- for p in use_collection.products limit: related_limit -%}
+              {%- unless p.id == product.id -%}
+                {% render 'product-card', product: p %}
+              {%- endunless -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </section>
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
+
+<!-- Recently Viewed -->
+{%- if section.settings.show_recently_viewed -%}
+  <div class="product-page" style="padding-bottom:64px;">
+    {% render 'recently-viewed', current_product: product %}
+  </div>
+{%- endif -%}
+
+<!-- Sticky Add to Cart Bar -->
+<div class="sticky-atc" id="StickyAtc" aria-hidden="true">
+  {%- if product.featured_image -%}
+    {{
+      product.featured_image
+      | image_url: width: 96
+      | image_tag: class: 'sticky-atc__img', loading: 'lazy', alt: ''
+    }}
+  {%- endif -%}
+  <span class="sticky-atc__title">{{ product.title }}</span>
+  <span class="sticky-atc__price js-product-price">{{ current_variant.price | money }}</span>
+  <button class="sticky-atc__btn" id="StickyAtcBtn" type="button">ADD TO CART</button>
+</div>
+
+<!-- Product JSON for JS -->
+<script>
+(function () {
+  const productData = {{ product | json }};
+  const variantData = {{ product.variants | json }};
+
+  /* === Thumbnail Gallery === */
+  const mainImg = document.getElementById('ProductMainImage');
+  document.querySelectorAll('.product-gallery__thumb').forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      document.querySelectorAll('.product-gallery__thumb').forEach(t => t.classList.remove('is-active'));
+      thumb.classList.add('is-active');
+      if (mainImg && thumb.dataset.src) {
+        mainImg.src = thumb.dataset.src;
+      }
+    });
+  });
+
+  /* === Variant Selection === */
+  const selectedOptions = {{ product.selected_or_first_available_variant.options | json }};
+
+  function findVariant(opts) {
+    return variantData.find(v => {
+      return v.options.every((o, i) => o === opts[i]);
+    });
+  }
+
+  function updatePriceDisplay(variant) {
+    const price = (variant.price / 100).toFixed(2);
+    document.querySelectorAll('.js-product-price').forEach(el => {
+      el.textContent = '$' + price;
+    });
+  }
+
+  function updateAtcButton(variant) {
+    const btn = document.getElementById('AddToCartBtn');
+    const soldOut = document.querySelector('.product-soldout-badge');
+    const stickyBtn = document.getElementById('StickyAtcBtn');
+    if (variant && variant.available) {
+      if (btn) { btn.disabled = false; btn.style.display = ''; }
+      if (soldOut) soldOut.style.display = 'none';
+      if (stickyBtn) { stickyBtn.disabled = false; stickyBtn.textContent = 'ADD TO CART'; }
+    } else {
+      if (btn) { btn.disabled = true; btn.style.display = 'none'; }
+      if (soldOut) soldOut.style.display = '';
+      if (stickyBtn) { stickyBtn.disabled = true; stickyBtn.textContent = 'SOLD OUT'; }
+    }
+    const variantInput = document.getElementById('VariantId');
+    if (variantInput && variant) variantInput.value = variant.id;
+  }
+
+  document.querySelectorAll('.variant-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const position = parseInt(btn.dataset.optionPosition) - 1;
+      selectedOptions[position] = btn.dataset.optionValue;
+
+      const optionGroup = btn.closest('[data-option-position]');
+      optionGroup.querySelectorAll('.variant-btn').forEach(b => {
+        b.classList.remove('is-selected');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add('is-selected');
+      btn.setAttribute('aria-pressed', 'true');
+
+      const label = document.getElementById('SelectedValue-' + (position + 1));
+      if (label) label.textContent = btn.dataset.optionValue;
+
+      const variant = findVariant(selectedOptions);
+      if (variant) {
+        updatePriceDisplay(variant);
+        updateAtcButton(variant);
+        if (variant.featured_image && mainImg) {
+          mainImg.src = variant.featured_image.src;
+        }
+      }
+    });
+  });
+
+  /* === Quantity Stepper === */
+  const qtyInput = document.getElementById('ProductQty');
+  document.getElementById('QtyMinus')?.addEventListener('click', () => {
+    if (qtyInput && parseInt(qtyInput.value) > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+  });
+  document.getElementById('QtyPlus')?.addEventListener('click', () => {
+    if (qtyInput) qtyInput.value = parseInt(qtyInput.value) + 1;
+  });
+
+  /* === Add to Cart AJAX === */
+  const form = document.getElementById('ProductAddToCart');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('AddToCartBtn');
+      const variantId = document.getElementById('VariantId').value;
+      const qty = parseInt(document.getElementById('ProductQty')?.value || 1);
+      const original = btn.innerHTML;
+
+      btn.textContent = 'ADDING...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: parseInt(variantId), quantity: qty })
+        });
+        if (res.ok) {
+          btn.textContent = 'ADDED!';
+          if (window.updateCartCount) await window.updateCartCount();
+          if (window.openCartDrawer) window.openCartDrawer();
+          setTimeout(() => { btn.innerHTML = original; btn.disabled = false; }, 1800);
+        } else {
+          const err = await res.json();
+          btn.textContent = err.description || 'OUT OF STOCK';
+          setTimeout(() => { btn.innerHTML = original; btn.disabled = false; }, 2200);
+        }
+      } catch {
+        btn.innerHTML = original;
+        btn.disabled = false;
+      }
+    });
+  }
+
+  /* === Sticky ATC Trigger === */
+  document.getElementById('StickyAtcBtn')?.addEventListener('click', () => {
+    document.getElementById('AddToCartBtn')?.click();
+  });
+
+  /* === Sticky ATC Visibility === */
+  const addBtn = document.getElementById('AddToCartBtn');
+  if (addBtn) {
+    const observer = new IntersectionObserver((entries) => {
+      const bar = document.getElementById('StickyAtc');
+      if (!bar) return;
+      if (entries[0].isIntersecting) {
+        bar.classList.remove('is-visible');
+        bar.setAttribute('aria-hidden', 'true');
+      } else {
+        bar.classList.add('is-visible');
+        bar.setAttribute('aria-hidden', 'false');
+      }
+    }, { threshold: 0 });
+    observer.observe(addBtn);
+  }
+
+  /* === Tab Switching === */
+  document.querySelectorAll('.product-tabs__btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.product-tabs__btn').forEach(b => {
+        b.classList.remove('is-active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      document.querySelectorAll('.product-tabs__panel').forEach(p => p.classList.remove('is-active'));
+
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-selected', 'true');
+      const panel = document.getElementById('tab-' + btn.dataset.tab);
+      if (panel) panel.classList.add('is-active');
+    });
+  });
+
+  /* === Recently Viewed === */
+  try {
+    const key = 'cwa_recently_viewed';
+    const stored = JSON.parse(localStorage.getItem(key) || '[]');
+    const current = { id: productData.id, handle: productData.handle, title: productData.title, price: productData.price, image: productData.featured_image };
+    const updated = [current, ...stored.filter(p => p.id !== productData.id)].slice(0, 6);
+    localStorage.setItem(key, JSON.stringify(updated));
+  } catch {}
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Membership Price"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_member_price",
+      "label": "Show membership price",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "member_price_label",
+      "label": "Membership label",
+      "default": "CRIMSON CLUB PRICE"
+    },
+    {
+      "type": "text",
+      "id": "member_price_value",
+      "label": "Membership price text (e.g. Join for 10% off)",
+      "default": "Join for 10% off"
+    },
+    {
+      "type": "header",
+      "content": "Trust Badges"
+    },
+    {
+      "type": "text",
+      "id": "badge_1",
+      "label": "Badge 1 text",
+      "default": "100% Authentic"
+    },
+    {
+      "type": "text",
+      "id": "badge_2",
+      "label": "Badge 2 text",
+      "default": "Fast US Shipping"
+    },
+    {
+      "type": "text",
+      "id": "badge_3",
+      "label": "Badge 3 text",
+      "default": "Pro Warranty"
+    },
+    {
+      "type": "header",
+      "content": "Description Tab"
+    },
+    {
+      "type": "image_picker",
+      "id": "desc_image",
+      "label": "Description side image (optional override)"
+    },
+    {
+      "type": "header",
+      "content": "Reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reviews",
+      "label": "Show reviews tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Related Products"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_related",
+      "label": "Show related products",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "related_collection",
+      "label": "Related products collection (falls back to product's first collection)"
+    },
+    {
+      "type": "range",
+      "id": "related_count",
+      "label": "Number of related products",
+      "min": 2,
+      "max": 8,
+      "step": 2,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "related_eyebrow",
+      "label": "Related products eyebrow",
+      "default": "PRO UPGRADE"
+    },
+    {
+      "type": "text",
+      "id": "related_heading",
+      "label": "Related products heading",
+      "default": "COMPLETE YOUR KIT"
+    },
+    {
+      "type": "header",
+      "content": "Recently Viewed"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recently_viewed",
+      "label": "Show recently viewed products",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "spec_row",
+      "name": "Spec Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "spec_label",
+          "label": "Specification name",
+          "default": "Material"
+        },
+        {
+          "type": "text",
+          "id": "spec_value",
+          "label": "Specification value",
+          "default": "Grade 1 English Willow"
+        }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Customer Review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "reviewer_name",
+          "label": "Reviewer name",
+          "default": "Marcus R."
+        },
+        {
+          "type": "text",
+          "id": "review_title",
+          "label": "Review title",
+          "default": "Exceptional Balance"
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review text",
+          "default": "The pick-up on this bat feels incredible. The sweet spot is massive and the ping is exceptional right out of the box. Worth every penny."
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "review_date",
+          "label": "Review date",
+          "default": "Oct 12, 2024"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Page",
+      "blocks": [
+        { "type": "spec_row", "settings": { "spec_label": "Willow Grade", "spec_value": "Hand Selected Grade 1+ English Willow" } },
+        { "type": "spec_row", "settings": { "spec_label": "Handle Type", "spec_value": "12 Piece Sarawak Cane" } },
+        { "type": "review", "settings": { "reviewer_name": "Marcus R.", "review_title": "Exceptional Balance", "rating": 5 } },
+        { "type": "review", "settings": { "reviewer_name": "David S.", "review_title": "Premium Power", "rating": 4 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

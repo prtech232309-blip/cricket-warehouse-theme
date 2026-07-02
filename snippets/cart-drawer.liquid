@@ -1,0 +1,31 @@
+<div class="cart-drawer-overlay" aria-hidden="true"></div>
+
+<div class="cart-drawer" id="CartDrawer" role="dialog" aria-modal="true" aria-label="Shopping cart">
+  <div class="cart-drawer__header">
+    <div>
+      <div class="cart-drawer__title">Your Bag</div>
+    </div>
+    <button class="cart-drawer__close" aria-label="Close cart">
+      <span class="material-symbols-outlined" aria-hidden="true">close</span>
+    </button>
+  </div>
+
+  <div class="cart-drawer__body">
+    <div class="cart-drawer__empty">
+      <span class="material-symbols-outlined">shopping_bag</span>
+      <p>Your bag is empty</p>
+    </div>
+  </div>
+
+  <div class="cart-drawer__footer" style="display:none;">
+    <div class="cart-drawer__subtotal">
+      <span class="cart-drawer__subtotal-label">Subtotal</span>
+      <span class="cart-drawer__subtotal-value">$0.00</span>
+    </div>
+    <a class="cart-drawer__checkout" href="{{ routes.cart_url }}/checkout">
+      <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;margin-right:6px;" aria-hidden="true">lock</span>
+      CHECKOUT
+    </a>
+    <a class="cart-drawer__view" href="{{ routes.cart_url }}">View Full Cart</a>
+  </div>
+</div>

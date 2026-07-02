@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {
+        "title": "PAGE NOT FOUND",
+        "description": "Looks like this page has been stumped. Let's get you back to the crease."
+      }
+    }
+  },
+  "order": ["main"]
+}

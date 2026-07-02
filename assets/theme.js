@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function () {
   initStickyHeader();
   initQuickAdd();
   updateCartCount();
+  initCartDrawer();
+  initEmailPopup();
+  initBackToTop();
 });
 
 /* Mobile Menu
@@ -109,7 +112,170 @@ async function updateCartCount() {
       badge.textContent = cart.item_count;
       badge.style.display = cart.item_count > 0 ? 'flex' : 'none';
     });
+    return cart;
   } catch {
-    // silent fail
+    return null;
   }
+}
+
+/* Cart Drawer
+   ============================================================ */
+function initCartDrawer() {
+  const drawer = document.querySelector('.cart-drawer');
+  const overlay = document.querySelector('.cart-drawer-overlay');
+  if (!drawer) return;
+
+  const openDrawer = async () => {
+    drawer.classList.add('is-open');
+    overlay?.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    await refreshCartDrawer();
+  };
+
+  const closeDrawer = () => {
+    drawer.classList.remove('is-open');
+    overlay?.classList.remove('is-open');
+    document.body.style.overflow = '';
+  };
+
+  document.querySelectorAll('[data-cart-drawer-open]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openDrawer();
+    });
+  });
+
+  overlay?.addEventListener('click', closeDrawer);
+  drawer.querySelector('.cart-drawer__close')?.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer();
+  });
+
+  window.openCartDrawer = openDrawer;
+  window.closeCartDrawer = closeDrawer;
+}
+
+async function refreshCartDrawer() {
+  const body = document.querySelector('.cart-drawer__body');
+  const footer = document.querySelector('.cart-drawer__footer');
+  const title = document.querySelector('.cart-drawer__title');
+  if (!body) return;
+
+  body.innerHTML = '<div class="cart-drawer__loading">Loading...</div>';
+
+  try {
+    const res = await fetch('/cart.js');
+    const cart = await res.json();
+
+    document.querySelectorAll('.js-cart-count').forEach(b => {
+      b.textContent = cart.item_count;
+      b.style.display = cart.item_count > 0 ? 'flex' : 'none';
+    });
+    if (title) {
+      title.textContent = cart.item_count > 0
+        ? `Your Bag (${cart.item_count})`
+        : 'Your Bag';
+    }
+
+    if (cart.item_count === 0) {
+      body.innerHTML = `
+        <div class="cart-drawer__empty">
+          <span class="material-symbols-outlined">shopping_bag</span>
+          <p>Your bag is empty</p>
+          <a class="btn btn-primary" href="/collections/all" onclick="window.closeCartDrawer && window.closeCartDrawer()" style="font-size:14px;padding:12px 24px;">SHOP NOW</a>
+        </div>`;
+      if (footer) footer.style.display = 'none';
+      return;
+    }
+
+    if (footer) footer.style.display = '';
+    const fmt = (c) => '$' + (c / 100).toFixed(2);
+
+    body.innerHTML = cart.items.map(item => `
+      <div class="cart-drawer__item">
+        <div class="cart-drawer__item-image">
+          ${item.image ? `<img src="${item.image}" alt="${item.product_title}" loading="lazy">` : ''}
+        </div>
+        <div class="cart-drawer__item-details">
+          <div class="cart-drawer__item-title">${item.product_title}</div>
+          ${item.variant_title && item.variant_title !== 'Default Title' ? `<div class="cart-drawer__item-variant">${item.variant_title}</div>` : ''}
+          <div class="cart-drawer__item-row">
+            <span class="cart-drawer__item-price">${fmt(item.line_price)}</span>
+            <button class="cart-drawer__item-remove" data-drawer-remove data-key="${item.key}">Remove</button>
+          </div>
+        </div>
+      </div>`).join('');
+
+    document.querySelector('.cart-drawer__subtotal-value').textContent = fmt(cart.total_price);
+
+    body.querySelectorAll('[data-drawer-remove]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        btn.textContent = '...';
+        try {
+          await fetch('/cart/change.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: btn.dataset.key, quantity: 0 })
+          });
+          await refreshCartDrawer();
+        } catch { await refreshCartDrawer(); }
+      });
+    });
+
+  } catch {
+    body.innerHTML = '<div class="cart-drawer__empty"><p>Could not load cart.</p></div>';
+  }
+}
+
+/* Email Popup
+   ============================================================ */
+function initEmailPopup() {
+  const overlay = document.querySelector('.email-popup-overlay');
+  if (!overlay) return;
+
+  const COOKIE_KEY = 'cwa_popup_dismissed';
+  if (document.cookie.includes(COOKIE_KEY)) return;
+
+  const open = () => overlay.classList.add('is-open');
+  const close = () => {
+    overlay.classList.remove('is-open');
+    const exp = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${COOKIE_KEY}=1; expires=${exp}; path=/`;
+  };
+
+  setTimeout(open, 4000);
+
+  overlay.querySelector('.email-popup__close')?.addEventListener('click', close);
+  overlay.querySelector('.email-popup__skip')?.addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+  const form = overlay.querySelector('.email-popup__form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      overlay.querySelector('.email-popup__content').innerHTML = `
+        <div class="email-popup__success">
+          <span class="material-symbols-outlined">check_circle</span>
+          <h3>YOU'RE IN!</h3>
+          <p>Your discount code is on its way. Welcome to the Crimson Club!</p>
+        </div>`;
+      setTimeout(close, 2500);
+    });
+  }
+}
+
+/* Back to Top
+   ============================================================ */
+function initBackToTop() {
+  const btn = document.querySelector('.back-to-top');
+  if (!btn) return;
+
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('is-visible', window.scrollY > 400);
+  }, { passive: true });
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }

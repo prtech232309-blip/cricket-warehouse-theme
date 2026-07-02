@@ -1,0 +1,75 @@
+{% layout 'theme' %}
+
+<div class="auth-page">
+  <div class="auth-card">
+    <span class="auth-card__eyebrow">JOIN THE CRIMSON CLUB</span>
+    <h1 class="auth-card__title">CREATE ACCOUNT</h1>
+    <p class="auth-card__desc">Create your Cricket Warehouse USA account for faster checkout, order tracking, and exclusive member pricing.</p>
+
+    {%- form 'create_customer', id: 'CreateCustomerForm' -%}
+      {%- if form.errors -%}
+        <ul class="auth-form__errors" role="alert">
+          {%- for error in form.errors -%}
+            <li>{{ form.errors.messages[error] }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <div class="auth-form__group">
+        <label class="auth-form__label" for="RegisterFirstName">First Name</label>
+        <input
+          class="auth-form__input"
+          type="text"
+          id="RegisterFirstName"
+          name="customer[first_name]"
+          autocomplete="given-name"
+          autocapitalize="words"
+        >
+      </div>
+
+      <div class="auth-form__group">
+        <label class="auth-form__label" for="RegisterLastName">Last Name</label>
+        <input
+          class="auth-form__input"
+          type="text"
+          id="RegisterLastName"
+          name="customer[last_name]"
+          autocomplete="family-name"
+          autocapitalize="words"
+        >
+      </div>
+
+      <div class="auth-form__group">
+        <label class="auth-form__label" for="RegisterEmail">Email Address</label>
+        <input
+          class="auth-form__input"
+          type="email"
+          id="RegisterEmail"
+          name="customer[email]"
+          autocomplete="email"
+          autocapitalize="off"
+          required
+        >
+      </div>
+
+      <div class="auth-form__group">
+        <label class="auth-form__label" for="RegisterPassword">Password</label>
+        <input
+          class="auth-form__input"
+          type="password"
+          id="RegisterPassword"
+          name="customer[password]"
+          autocomplete="new-password"
+          required
+          minlength="5"
+        >
+      </div>
+
+      <button class="auth-form__submit" type="submit">CREATE ACCOUNT</button>
+    {%- endform -%}
+
+    <div class="auth-links">
+      <a href="{{ routes.account_login_url }}">Already have an account? Sign in &rarr;</a>
+    </div>
+  </div>
+</div>

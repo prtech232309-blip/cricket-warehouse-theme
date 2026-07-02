@@ -1,0 +1,51 @@
+{% layout 'theme' %}
+
+<div class="auth-page">
+  <div class="auth-card">
+    <span class="auth-card__eyebrow">ACCOUNT ACCESS</span>
+    <h1 class="auth-card__title">SIGN IN</h1>
+    <p class="auth-card__desc">Welcome back, player. Sign in to manage your orders and gear.</p>
+
+    {%- form 'customer_login', id: 'CustomerLoginForm' -%}
+      {%- if form.errors -%}
+        <ul class="auth-form__errors" role="alert">
+          {%- for error in form.errors -%}
+            <li>{{ form.errors.messages[error] }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <div class="auth-form__group">
+        <label class="auth-form__label" for="CustomerEmail">Email Address</label>
+        <input
+          class="auth-form__input"
+          type="email"
+          id="CustomerEmail"
+          name="customer[email]"
+          autocomplete="email"
+          autocapitalize="off"
+          required
+        >
+      </div>
+
+      <div class="auth-form__group">
+        <label class="auth-form__label" for="CustomerPassword">Password</label>
+        <input
+          class="auth-form__input"
+          type="password"
+          id="CustomerPassword"
+          name="customer[password]"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button class="auth-form__submit" type="submit">SIGN IN</button>
+    {%- endform -%}
+
+    <div class="auth-links">
+      <a href="{{ routes.account_recover_url }}">Forgot your password?</a>
+      <a href="{{ routes.account_register_url }}">Create an account &rarr;</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,116 @@
+<div class="search-page">
+
+  <h1 class="search-page__title">
+    {%- if search.performed -%}
+      Search Results for &ldquo;{{ search.terms | escape }}&rdquo;
+    {%- else -%}
+      Search
+    {%- endif -%}
+  </h1>
+
+  <!-- Search Form -->
+  <form class="search-form" action="{{ routes.search_url }}" method="get" role="search">
+    <input
+      class="search-form__input"
+      type="search"
+      name="q"
+      value="{{ search.terms | escape }}"
+      placeholder="{{ section.settings.placeholder | default: 'Search gear, brands, categories...' }}"
+      aria-label="Search"
+      autocomplete="off"
+    >
+    <input type="hidden" name="type" value="product">
+    <button class="search-form__btn" type="submit" aria-label="Submit search">
+      <span class="material-symbols-outlined" aria-hidden="true">search</span>
+    </button>
+  </form>
+
+  {%- if search.performed -%}
+    {%- if search.results_count > 0 -%}
+      <p class="search-count">
+        Found <strong>{{ search.results_count }}</strong> result{{ search.results_count | pluralize: '', 's' }} for <strong>&ldquo;{{ search.terms | escape }}&rdquo;</strong>
+      </p>
+
+      {%- paginate search.results by section.settings.results_per_page -%}
+        <div class="product-grid">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item %}
+            {%- else -%}
+              <!-- Article / Page result -->
+              <div style="border:1px solid var(--color-outline-variant);padding:24px;">
+                <span style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;color:var(--color-sport-red);">{{ item.object_type | capitalize }}</span>
+                <h3 style="font-family:var(--font-heading);font-size:18px;color:var(--color-deep-navy);margin:8px 0;">
+                  <a href="{{ item.url }}" style="text-decoration:none;color:inherit;">{{ item.title }}</a>
+                </h3>
+                {%- if item.excerpt != blank -%}
+                  <p style="color:var(--color-on-surface-variant);font-size:14px;line-height:1.6;">{{ item.excerpt | strip_html | truncate: 120 }}</p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="collection-pagination" aria-label="Search pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" aria-label="Previous page">
+                <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+              </a>
+            {%- endif -%}
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}">{{ part.title }}</a>
+              {%- else -%}
+                <span{% if part.title == paginate.current_page %} class="current" aria-current="page"{% endif %}>{{ part.title }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" aria-label="Next page">
+                <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+              </a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
+
+    {%- else -%}
+      <div class="search-no-results">
+        <span class="material-symbols-outlined" aria-hidden="true">manage_search</span>
+        <p class="search-no-results__title">NO RESULTS FOUND</p>
+        <p class="search-no-results__desc">We couldn't find anything matching &ldquo;{{ search.terms | escape }}&rdquo;. Try different keywords or browse our collections.</p>
+        <a class="btn btn-primary" href="{{ routes.collections_url }}" style="font-size:16px;padding:14px 32px;">BROWSE ALL GEAR</a>
+      </div>
+    {%- endif -%}
+  {%- else -%}
+    <div class="search-no-results">
+      <span class="material-symbols-outlined" aria-hidden="true">search</span>
+      <p class="search-no-results__title">WHAT ARE YOU LOOKING FOR?</p>
+      <p class="search-no-results__desc">Search for bats, pads, helmets, gloves, and more professional cricket equipment.</p>
+    </div>
+  {%- endif -%}
+
+</div>
+
+{% schema %}
+{
+  "name": "Search Results",
+  "settings": [
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Search input placeholder",
+      "default": "Search gear, brands, categories..."
+    },
+    {
+      "type": "range",
+      "id": "results_per_page",
+      "label": "Results per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    }
+  ]
+}
+{% endschema %}

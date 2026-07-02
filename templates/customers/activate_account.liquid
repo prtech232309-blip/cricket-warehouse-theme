@@ -1,0 +1,46 @@
+{% layout 'theme' %}
+
+<div class="auth-page">
+  <div class="auth-card">
+    <span class="auth-card__eyebrow">ACCOUNT ACTIVATION</span>
+    <h1 class="auth-card__title">ACTIVATE ACCOUNT</h1>
+    <p class="auth-card__desc">Create a password to activate your Cricket Warehouse USA account.</p>
+
+    {%- form 'activate_customer_password' -%}
+      {%- if form.errors -%}
+        <ul class="auth-form__errors" role="alert">
+          {%- for error in form.errors -%}
+            <li>{{ form.errors.messages[error] }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      <div class="auth-form__group">
+        <label class="auth-form__label" for="ActivatePassword">Password</label>
+        <input
+          class="auth-form__input"
+          type="password"
+          id="ActivatePassword"
+          name="customer[password]"
+          autocomplete="new-password"
+          required
+          minlength="5"
+        >
+      </div>
+
+      <div class="auth-form__group">
+        <label class="auth-form__label" for="ActivatePasswordConfirm">Confirm Password</label>
+        <input
+          class="auth-form__input"
+          type="password"
+          id="ActivatePasswordConfirm"
+          name="customer[password_confirmation]"
+          autocomplete="new-password"
+          required
+        >
+      </div>
+
+      <button class="auth-form__submit" type="submit">ACTIVATE ACCOUNT</button>
+    {%- endform -%}
+  </div>
+</div>

@@ -1,0 +1,88 @@
+{% layout 'theme' %}
+
+<div class="account-page">
+  <div class="account-page__banner">
+    <h1 class="account-page__greeting">Hey, {{ customer.first_name | default: customer.name }}!</h1>
+    <p class="account-page__email">{{ customer.email }}</p>
+    <a class="account-page__logout" href="{{ routes.account_logout_url }}">Sign out</a>
+  </div>
+
+  <div class="account-page__inner">
+    <div class="account-grid">
+
+      <!-- Orders -->
+      <div>
+        <h2 class="account-section__title">Order History</h2>
+        {%- if customer.orders.size > 0 -%}
+          <div style="overflow-x:auto;">
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for order in customer.orders -%}
+                  {%- assign fulfillment_status = order.fulfillment_status | downcase -%}
+                  <tr>
+                    <td><a href="{{ order.customer_url }}">#{{ order.name }}</a></td>
+                    <td>{{ order.created_at | date: '%b %d, %Y' }}</td>
+                    <td>
+                      <span class="order-status order-status--{{ fulfillment_status | replace: ' ', '-' }}">
+                        {{ order.fulfillment_status_label }}
+                      </span>
+                    </td>
+                    <td>{{ order.total_price | money }}</td>
+                    <td><a href="{{ order.customer_url }}" style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-deep-navy);text-decoration:none;">VIEW &rarr;</a></td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          </div>
+        {%- else -%}
+          <div class="account-no-orders">
+            <span class="material-symbols-outlined" aria-hidden="true">package_2</span>
+            <p>You haven't placed any orders yet.</p>
+            <a class="btn btn-primary" href="{{ routes.collections_url }}" style="margin-top:16px;display:inline-block;font-size:14px;padding:12px 28px;">SHOP NOW</a>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Sidebar -->
+      <div>
+        <!-- Default Address -->
+        <div class="account-sidebar__section">
+          <div class="account-sidebar__section-title">Default Address</div>
+          {%- if customer.default_address -%}
+            <address class="account-sidebar__address" style="font-style:normal;">
+              <strong>{{ customer.default_address.name }}</strong>
+              {{ customer.default_address.address1 }}<br>
+              {%- if customer.default_address.address2 != blank -%}
+                {{ customer.default_address.address2 }}<br>
+              {%- endif -%}
+              {{ customer.default_address.city }}, {{ customer.default_address.province_code }} {{ customer.default_address.zip }}<br>
+              {{ customer.default_address.country }}
+            </address>
+          {%- else -%}
+            <p style="color:var(--color-on-surface-variant);font-size:14px;">No default address set.</p>
+          {%- endif -%}
+        </div>
+
+        <!-- Quick Links -->
+        <div class="account-sidebar__section">
+          <div class="account-sidebar__section-title">My Account</div>
+          <div class="account-sidebar__links">
+            <a href="{{ routes.account_addresses_url }}">Manage Addresses</a>
+            <a href="{{ routes.collections_url }}">Continue Shopping</a>
+            <a href="{{ routes.account_logout_url }}">Sign Out</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "eyebrow": "GET IN TOUCH",
+        "show_contact_form": true,
+        "submit_text": "SEND MESSAGE"
+      }
+    }
+  },
+  "order": ["main"]
+}

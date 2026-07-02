@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "eyebrow": "THE PITCH",
+        "articles_per_page": 9
+      }
+    }
+  },
+  "order": ["main"]
+}

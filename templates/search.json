@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-search",
+      "settings": {
+        "placeholder": "Search gear, brands, categories...",
+        "results_per_page": 24
+      }
+    }
+  },
+  "order": ["main"]
+}

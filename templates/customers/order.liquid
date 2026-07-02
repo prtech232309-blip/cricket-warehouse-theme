@@ -1,0 +1,129 @@
+{% layout 'theme' %}
+
+<div class="order-detail">
+
+  <a class="order-detail__back" href="{{ routes.account_url }}">
+    <span class="material-symbols-outlined" style="font-size:16px;" aria-hidden="true">arrow_back</span>
+    Back to My Account
+  </a>
+
+  <div class="order-detail__header">
+    <div>
+      <h1 class="order-detail__title">Order #{{ order.name }}</h1>
+      <p class="order-detail__date">Placed on {{ order.created_at | date: '%B %d, %Y at %I:%M %p' }}</p>
+    </div>
+    {%- assign fulfillment_status = order.fulfillment_status | downcase -%}
+    <span class="order-status order-status--{{ fulfillment_status | replace: ' ', '-' }}" style="font-size:12px;padding:6px 14px;">
+      {{ order.fulfillment_status_label }}
+    </span>
+  </div>
+
+  <div class="order-detail-grid">
+
+    <!-- Left: Items -->
+    <div>
+      <p class="order-detail__section-title">Items Ordered</p>
+      <div class="order-items-table">
+        {%- for line_item in order.line_items -%}
+          <div class="order-item">
+            <div>
+              {%- if line_item.image -%}
+                {{
+                  line_item.image
+                  | image_url: width: 144
+                  | image_tag: class: 'order-item__image', loading: 'lazy', alt: line_item.title | escape
+                }}
+              {%- else -%}
+                <div class="order-item__image"></div>
+              {%- endif -%}
+            </div>
+            <div>
+              <div class="order-item__title">{{ line_item.title }}</div>
+              {%- unless line_item.variant.title == 'Default Title' -%}
+                <div class="order-item__variant">{{ line_item.variant.title }}</div>
+              {%- endunless -%}
+              <div class="order-item__qty">Qty: {{ line_item.quantity }}</div>
+            </div>
+            <div class="order-item__price">{{ line_item.line_price | money }}</div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <!-- Order Totals -->
+      <div class="order-totals" style="margin-top:1px;">
+        <div class="order-totals__row">
+          <span>Subtotal</span>
+          <span><strong>{{ order.subtotal_price | money }}</strong></span>
+        </div>
+        {%- for discount_application in order.discount_applications -%}
+          <div class="order-totals__row" style="color:var(--color-sport-red);">
+            <span>Discount ({{ discount_application.title }})</span>
+            <span><strong>-{{ discount_application.total_allocated_amount | money }}</strong></span>
+          </div>
+        {%- endfor -%}
+        <div class="order-totals__row">
+          <span>Shipping</span>
+          <span><strong>{{ order.shipping_price | money }}</strong></span>
+        </div>
+        {%- if order.tax_price > 0 -%}
+          <div class="order-totals__row">
+            <span>Tax</span>
+            <span><strong>{{ order.tax_price | money }}</strong></span>
+          </div>
+        {%- endif -%}
+        <div class="order-totals__row order-totals__row--total">
+          <span>Total</span>
+          <span>{{ order.total_price | money }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Shipping + Billing -->
+    <div>
+      {%- if order.shipping_address -%}
+        <div style="margin-bottom:32px;">
+          <p class="order-detail__section-title">Shipping Address</p>
+          <address class="order-address" style="font-style:normal;">
+            <strong>{{ order.shipping_address.name }}</strong>
+            {{ order.shipping_address.address1 }}<br>
+            {%- if order.shipping_address.address2 != blank -%}
+              {{ order.shipping_address.address2 }}<br>
+            {%- endif -%}
+            {{ order.shipping_address.city }}, {{ order.shipping_address.province_code }} {{ order.shipping_address.zip }}<br>
+            {{ order.shipping_address.country }}
+          </address>
+        </div>
+      {%- endif -%}
+
+      {%- if order.billing_address -%}
+        <div style="margin-bottom:32px;">
+          <p class="order-detail__section-title">Billing Address</p>
+          <address class="order-address" style="font-style:normal;">
+            <strong>{{ order.billing_address.name }}</strong>
+            {{ order.billing_address.address1 }}<br>
+            {%- if order.billing_address.address2 != blank -%}
+              {{ order.billing_address.address2 }}<br>
+            {%- endif -%}
+            {{ order.billing_address.city }}, {{ order.billing_address.province_code }} {{ order.billing_address.zip }}<br>
+            {{ order.billing_address.country }}
+          </address>
+        </div>
+      {%- endif -%}
+
+      {%- if order.transactions.size > 0 -%}
+        <div>
+          <p class="order-detail__section-title">Payment Method</p>
+          {%- for transaction in order.transactions -%}
+            {%- if transaction.status == 'success' and transaction.kind == 'capture' or transaction.kind == 'sale' -%}
+              <p style="font-size:15px;color:var(--color-on-surface-variant);">
+                {{ transaction.payment_details.credit_card_company }}
+                ending in {{ transaction.payment_details.credit_card_last_four_digits }}
+              </p>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</div>

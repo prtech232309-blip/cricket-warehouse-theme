@@ -1,0 +1,124 @@
+<div class="page-content">
+  <div class="page-content__header">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="page-content__eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h1 class="page-content__title">{{ page.title }}</h1>
+  </div>
+
+  {%- if page.content != blank -%}
+    <div class="page-content__body">
+      {{ page.content }}
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_contact_form -%}
+    <div class="contact-form">
+      {%- form 'contact', id: 'ContactForm' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="contact-form__success" role="alert">
+            <strong>Thank you!</strong> Your message has been sent. We'll get back to you within 24 hours.
+          </div>
+        {%- endif -%}
+        {%- if form.errors -%}
+          <div class="contact-form__errors" role="alert">
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <div class="contact-form__row is-2col">
+          <div class="contact-form__group">
+            <label class="contact-form__label" for="ContactFirstName">First Name</label>
+            <input
+              class="contact-form__input"
+              type="text"
+              id="ContactFirstName"
+              name="contact[first_name]"
+              autocomplete="given-name"
+            >
+          </div>
+          <div class="contact-form__group">
+            <label class="contact-form__label" for="ContactLastName">Last Name</label>
+            <input
+              class="contact-form__input"
+              type="text"
+              id="ContactLastName"
+              name="contact[last_name]"
+              autocomplete="family-name"
+            >
+          </div>
+        </div>
+
+        <div class="contact-form__row">
+          <div class="contact-form__group">
+            <label class="contact-form__label" for="ContactEmail">Email Address *</label>
+            <input
+              class="contact-form__input"
+              type="email"
+              id="ContactEmail"
+              name="contact[email]"
+              required
+              autocomplete="email"
+            >
+          </div>
+        </div>
+
+        <div class="contact-form__row">
+          <div class="contact-form__group">
+            <label class="contact-form__label" for="ContactSubject">Subject</label>
+            <input
+              class="contact-form__input"
+              type="text"
+              id="ContactSubject"
+              name="contact[subject]"
+            >
+          </div>
+        </div>
+
+        <div class="contact-form__row">
+          <div class="contact-form__group">
+            <label class="contact-form__label" for="ContactBody">Message *</label>
+            <textarea
+              class="contact-form__textarea"
+              id="ContactBody"
+              name="contact[body]"
+              required
+              rows="6"
+            ></textarea>
+          </div>
+        </div>
+
+        <button class="contact-form__submit" type="submit">
+          {{ section.settings.submit_text | default: 'SEND MESSAGE' }}
+        </button>
+
+      {%- endform -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Page Content",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label (optional)",
+      "default": ""
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_form",
+      "label": "Show contact form below content",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "submit_text",
+      "label": "Contact form button text",
+      "default": "SEND MESSAGE"
+    }
+  ]
+}
+{% endschema %}

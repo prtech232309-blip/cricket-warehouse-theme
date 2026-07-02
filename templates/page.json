@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "eyebrow": "",
+        "show_contact_form": false,
+        "submit_text": "SEND MESSAGE"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,66 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "spec_1": {
+          "type": "spec_row",
+          "settings": {
+            "spec_label": "Willow Grade",
+            "spec_value": "Hand Selected Grade 1+ English Willow"
+          }
+        },
+        "spec_2": {
+          "type": "spec_row",
+          "settings": {
+            "spec_label": "Handle Type",
+            "spec_value": "12 Piece Sarawak Cane Handle"
+          }
+        },
+        "spec_3": {
+          "type": "spec_row",
+          "settings": {
+            "spec_label": "Edge Thickness",
+            "spec_value": "38mm – 42mm Professional Profile"
+          }
+        },
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "Marcus R.",
+            "review_title": "Exceptional Balance",
+            "review_text": "The pick-up on this bat feels incredible. The sweet spot is massive and the ping is exceptional right out of the box. Worth every penny for competitive league play.",
+            "rating": 5,
+            "review_date": "Oct 12, 2024"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "reviewer_name": "David S.",
+            "review_title": "Premium Power",
+            "review_text": "Great product, although it required about 4 hours of knocking in to reach full potential. Once ready, it hits boundaries with minimal effort. Handle grip is high quality.",
+            "rating": 4,
+            "review_date": "Nov 05, 2024"
+          }
+        }
+      },
+      "block_order": ["spec_1", "spec_2", "spec_3", "review_1", "review_2"],
+      "settings": {
+        "show_member_price": true,
+        "member_price_label": "CRIMSON CLUB PRICE",
+        "member_price_value": "Join for 10% off",
+        "badge_1": "100% Authentic",
+        "badge_2": "Fast US Shipping",
+        "badge_3": "Pro Warranty",
+        "show_reviews": true,
+        "show_related": true,
+        "related_count": 4,
+        "related_eyebrow": "PRO UPGRADE",
+        "related_heading": "COMPLETE YOUR KIT",
+        "show_recently_viewed": true
+      }
+    }
+  },
+  "order": ["main"]
+}

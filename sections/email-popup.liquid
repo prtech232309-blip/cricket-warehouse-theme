@@ -1,0 +1,113 @@
+{%- if section.settings.show_popup -%}
+<div class="email-popup-overlay" id="EmailPopup" role="dialog" aria-modal="true" aria-label="Newsletter signup">
+  <div class="email-popup">
+    {%- if section.settings.popup_image != blank -%}
+      <div class="email-popup__image">
+        {{
+          section.settings.popup_image
+          | image_url: width: 400
+          | image_tag: loading: 'lazy', alt: ''
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="email-popup__content">
+      <button class="email-popup__close" aria-label="Close popup">
+        <span class="material-symbols-outlined" style="font-size:20px;" aria-hidden="true">close</span>
+      </button>
+      <span class="email-popup__eyebrow">{{ section.settings.eyebrow }}</span>
+      <h2 class="email-popup__title">
+        {{ section.settings.title_line1 }}
+        <span>{{ section.settings.title_highlight }}</span>
+        {{ section.settings.title_line2 }}
+      </h2>
+      <p class="email-popup__desc">{{ section.settings.description }}</p>
+
+      <form class="email-popup__form" novalidate>
+        <input
+          class="email-popup__input"
+          type="email"
+          name="contact[email]"
+          placeholder="{{ section.settings.email_placeholder }}"
+          required
+          autocomplete="email"
+          aria-label="Email address"
+        >
+        <button class="email-popup__submit" type="submit">{{ section.settings.cta_text }}</button>
+      </form>
+      <button class="email-popup__skip">{{ section.settings.skip_text }}</button>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Email Popup",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_popup",
+      "label": "Enable email popup",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "popup_image",
+      "label": "Side image (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "EXCLUSIVE OFFER"
+    },
+    {
+      "type": "text",
+      "id": "title_line1",
+      "label": "Heading line 1",
+      "default": "GET"
+    },
+    {
+      "type": "text",
+      "id": "title_highlight",
+      "label": "Highlighted text (in red)",
+      "default": "10% OFF"
+    },
+    {
+      "type": "text",
+      "id": "title_line2",
+      "label": "Heading line 2",
+      "default": "YOUR FIRST ORDER"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Join the Crimson Club for exclusive deals, early access to new gear, and cricket tips from the pros."
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email field placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button text",
+      "default": "CLAIM MY DISCOUNT"
+    },
+    {
+      "type": "text",
+      "id": "skip_text",
+      "label": "Skip link text",
+      "default": "No thanks, I prefer full price"
+    }
+  ]
+}
+{% endschema %}
