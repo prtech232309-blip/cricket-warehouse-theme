@@ -61,7 +61,8 @@ function initStickyHeader() {
    ============================================================ */
 function initQuickAdd() {
   document.querySelectorAll('[data-quick-add]').forEach(btn => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
       const variantId = btn.dataset.variantId;
       if (!variantId) return;
 

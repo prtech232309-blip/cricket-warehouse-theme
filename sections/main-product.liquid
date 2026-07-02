@@ -170,7 +170,7 @@
 
       <!-- Buy Now -->
       {%- if current_variant.available -%}
-        <a class="product-buy-btn" href="/cart/now?id={{ current_variant.id }}&quantity=1">BUY NOW</a>
+        <button class="product-buy-btn" type="button" id="BuyNowBtn">BUY NOW</button>
       {%- endif -%}
 
       <!-- Trust Badges -->
@@ -481,6 +481,32 @@
       }
     });
   }
+
+  /* === Buy Now === */
+  document.getElementById('BuyNowBtn')?.addEventListener('click', async () => {
+    const btn = document.getElementById('BuyNowBtn');
+    const variantId = document.getElementById('VariantId').value;
+    const qty = parseInt(document.getElementById('ProductQty')?.value || 1);
+    const original = btn.textContent;
+    btn.textContent = 'PROCESSING...';
+    btn.disabled = true;
+    try {
+      const res = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: parseInt(variantId), quantity: qty })
+      });
+      if (res.ok) {
+        window.location.href = '/checkout';
+      } else {
+        btn.textContent = 'OUT OF STOCK';
+        setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 2000);
+      }
+    } catch {
+      btn.textContent = original;
+      btn.disabled = false;
+    }
+  });
 
   /* === Sticky ATC Trigger === */
   document.getElementById('StickyAtcBtn')?.addEventListener('click', () => {
