@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {
+        "show_note": true,
+        "note_label": "SPECIAL INSTRUCTIONS",
+        "note_placeholder": "Add a note about your order (e.g., gift message, bat oiling request)...",
+        "show_promo": true,
+        "promo_placeholder": "ENTER CODE"
+      }
+    }
+  },
+  "order": ["main"]
+}

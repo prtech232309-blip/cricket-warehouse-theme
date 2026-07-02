@@ -1,0 +1,314 @@
+<!-- Collection Banner -->
+<section class="collection-banner">
+  <div class="collection-banner__bg">
+    {%- if section.settings.banner_image != blank -%}
+      {{
+        section.settings.banner_image
+        | image_url: width: 1920
+        | image_tag: loading: 'eager', fetchpriority: 'high', alt: ''
+      }}
+    {%- endif -%}
+    <div class="collection-banner__overlay"></div>
+    <svg class="collection-banner__pattern" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 0 L100 100 M20 0 L100 80 M40 0 L100 60 M60 0 L100 40 M80 0 L100 20" fill="none" stroke="white" stroke-width="0.5"/>
+    </svg>
+  </div>
+  <div class="collection-banner__content">
+    <span class="collection-banner__eyebrow">{{ section.settings.eyebrow | default: 'PROFESSIONAL EQUIPMENT' }}</span>
+    <h1 class="collection-banner__title">{{ collection.title | upcase | default: 'SHOP ALL CRICKET GEAR' }}</h1>
+    {%- if collection.description != blank -%}
+      <p class="collection-banner__desc">{{ collection.description | strip_html | truncate: 140 }}</p>
+    {%- elsif section.settings.banner_desc != blank -%}
+      <p class="collection-banner__desc">{{ section.settings.banner_desc }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+<!-- Main Collection Page -->
+<div class="collection-page">
+  {%- paginate collection.products by section.settings.products_per_page -%}
+
+  <div class="collection-layout">
+
+    <!-- Sidebar Filters -->
+    <aside class="collection-sidebar" aria-label="Product filters">
+      <div class="collection-sidebar__header">
+        <h2 class="collection-sidebar__title">Filters</h2>
+      </div>
+
+      {%- if collection.filters.size > 0 -%}
+        <form id="FiltersForm" action="{{ collection.url }}" method="get">
+          {%- if collection.sort_by != blank -%}
+            <input type="hidden" name="sort_by" value="{{ collection.sort_by }}">
+          {%- endif -%}
+
+          {%- for filter in collection.filters -%}
+            {%- case filter.type -%}
+
+              {%- when 'list' -%}
+                <div class="filter-group">
+                  <span class="filter-group__label">{{ filter.label | upcase }}</span>
+                  <div class="filter-checkbox-list">
+                    {%- for filter_value in filter.values -%}
+                      <label class="filter-checkbox-item">
+                        <input
+                          type="checkbox"
+                          name="{{ filter_value.param_name }}"
+                          value="{{ filter_value.value }}"
+                          {% if filter_value.active %}checked{% endif %}
+                          {% if filter_value.count == 0 and filter_value.active == false %}disabled{% endif %}
+                          onchange="this.form.submit()"
+                        >
+                        <span>{{ filter_value.label }} ({{ filter_value.count }})</span>
+                      </label>
+                    {%- endfor -%}
+                  </div>
+                </div>
+
+              {%- when 'price_range' -%}
+                <div class="filter-group">
+                  <div class="filter-price-header">
+                    <span class="filter-group__label">PRICE RANGE</span>
+                    <span class="filter-price-badge">
+                      ${{ filter.min_value.value | default: 0 }} – ${{ filter.max_value.value | default: filter.range_max }}
+                    </span>
+                  </div>
+                  <div class="filter-price-range">
+                    <input
+                      type="number"
+                      name="{{ filter.min_value.param_name }}"
+                      id="Filter-{{ filter.param_name }}-GTE"
+                      value="{{ filter.min_value.value }}"
+                      min="0"
+                      max="{{ filter.max_value.value | default: filter.range_max }}"
+                      placeholder="Min $"
+                    >
+                    <input
+                      type="number"
+                      name="{{ filter.max_value.param_name }}"
+                      id="Filter-{{ filter.param_name }}-LTE"
+                      value="{{ filter.max_value.value }}"
+                      min="{{ filter.min_value.value | default: '0' }}"
+                      max="{{ filter.range_max }}"
+                      placeholder="Max $"
+                    >
+                  </div>
+                  <input
+                    class="filter-price-slider"
+                    type="range"
+                    min="0"
+                    max="{{ filter.range_max }}"
+                    value="{{ filter.max_value.value | default: filter.range_max }}"
+                    oninput="document.getElementById('Filter-{{ filter.param_name }}-LTE').value = this.value"
+                  >
+                  <button type="submit" style="display:none;">Apply</button>
+                </div>
+
+            {%- endcase -%}
+          {%- endfor -%}
+
+          {%- if current_tags.size > 0 or collection.filters | map: 'active_values' | join: '' != '' -%}
+            <a class="filter-clear-btn" href="{{ collection.url }}">Clear All Filters</a>
+          {%- endif -%}
+        </form>
+
+      {%- else -%}
+        {%- comment -%} Fallback: tag-based filtering when Storefront filtering is not enabled {%- endcomment -%}
+        <div class="filter-group">
+          <span class="filter-group__label">CATEGORIES</span>
+          <div class="filter-checkbox-list">
+            {%- assign category_tags = 'english-willow,cricket-balls,batting-pads,batting-gloves,helmets' | split: ',' -%}
+            {%- assign category_labels = 'English Willow Bats,Cricket Balls,Batting Pads,Batting Gloves,Helmets' | split: ',' -%}
+            {%- for tag in category_tags -%}
+              <label class="filter-checkbox-item">
+                <input
+                  type="checkbox"
+                  {% if current_tags contains tag %}checked{% endif %}
+                  onchange="window.location.href='{{ collection.url }}/{{ tag }}'"
+                >
+                <span>{{ category_labels[forloop.index0] }}</span>
+              </label>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {%- if section.settings.show_size_filter -%}
+          <div class="filter-group">
+            <span class="filter-group__label">SIZES</span>
+            <div class="filter-size-grid">
+              {%- assign sizes = 'SH,LB,6,5,4' | split: ',' -%}
+              {%- for size in sizes -%}
+                <a
+                  class="filter-size-btn{% if current_tags contains size %} is-active{% endif %}"
+                  href="{{ collection.url }}/{{ size }}"
+                >{{ size }}</a>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if current_tags.size > 0 -%}
+          <a class="filter-clear-btn" href="{{ collection.url }}">Clear All</a>
+        {%- endif -%}
+      {%- endif -%}
+    </aside>
+
+    <!-- Product Grid -->
+    <section class="collection-main" aria-label="Products">
+
+      <!-- Active filter tags -->
+      {%- assign active_filter_count = 0 -%}
+      {%- for filter in collection.filters -%}
+        {%- assign active_filter_count = active_filter_count | plus: filter.active_values.size -%}
+      {%- endfor -%}
+      {%- if active_filter_count > 0 -%}
+        <div class="active-filters">
+          {%- for filter in collection.filters -%}
+            {%- for filter_value in filter.active_values -%}
+              <a class="active-filter-tag" href="{{ filter_value.url_to_remove }}">
+                {{ filter_value.label }}
+                <span class="material-symbols-outlined" style="font-size:14px;" aria-hidden="true">close</span>
+              </a>
+            {%- endfor -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <!-- Toolbar: count + sort -->
+      <div class="collection-toolbar">
+        <p class="collection-count">
+          Showing <strong>{{ paginate.items }}</strong> products
+          {%- if paginate.pages > 1 -%}
+            &mdash; Page {{ paginate.current_page }} of {{ paginate.pages }}
+          {%- endif -%}
+        </p>
+        <div class="collection-sort-wrap">
+          <label class="collection-sort-label" for="SortBy">SORT BY:</label>
+          <select
+            class="collection-sort-select"
+            id="SortBy"
+            name="sort_by"
+            data-sort-select
+            aria-label="Sort products"
+          >
+            {%- for option in collection.sort_options -%}
+              <option
+                value="{{ option.value }}"
+                {% if collection.sort_by == option.value %}selected{% endif %}
+              >
+                {{ option.name }}
+              </option>
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+
+      <!-- Products -->
+      {%- if collection.products.size > 0 -%}
+        <div class="product-grid">
+          {%- for product in collection.products -%}
+            {% render 'product-card', product: product %}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <div class="product-grid">
+          <div class="collection-empty">
+            <p class="collection-empty__title">No products found</p>
+            <p class="collection-empty__desc">Try adjusting or clearing your filters.</p>
+            <a class="btn btn-primary" href="{{ collection.url }}" style="font-size:16px;padding:12px 24px;">
+              Clear all filters
+            </a>
+          </div>
+        </div>
+      {%- endif -%}
+
+      <!-- Pagination -->
+      {%- if paginate.pages > 1 -%}
+        <nav class="collection-pagination" aria-label="Pagination">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" aria-label="Previous page">
+              <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+            </a>
+          {%- endif -%}
+
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}">{{ part.title }}</a>
+            {%- else -%}
+              {%- if part.title == paginate.current_page -%}
+                <span class="current" aria-current="page">{{ part.title }}</span>
+              {%- else -%}
+                <span>{{ part.title }}</span>
+              {%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" aria-label="Next page">
+              <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+            </a>
+          {%- endif -%}
+        </nav>
+      {%- endif -%}
+
+    </section>
+  </div>
+
+  {%- endpaginate -%}
+</div>
+
+<script>
+  document.querySelector('[data-sort-select]')?.addEventListener('change', function () {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort_by', this.value);
+    window.location.href = url.toString();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_image",
+      "label": "Banner background image"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Banner eyebrow",
+      "default": "PROFESSIONAL EQUIPMENT"
+    },
+    {
+      "type": "text",
+      "id": "banner_desc",
+      "label": "Banner description (fallback if no collection description)",
+      "default": "Equip yourself with the same gear used by world-class professionals on the biggest stage."
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 6,
+      "max": 48,
+      "step": 6,
+      "default": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_filter",
+      "label": "Show size filter (tag-based fallback)",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

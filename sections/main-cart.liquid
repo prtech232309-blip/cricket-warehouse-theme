@@ -1,0 +1,355 @@
+<div class="cart-page">
+
+  <!-- Breadcrumbs -->
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a>
+    <span class="material-symbols-outlined breadcrumbs__sep" aria-hidden="true">chevron_right</span>
+    <span>Shopping Cart</span>
+  </nav>
+
+  {%- if cart.item_count > 0 -%}
+
+    <h1 class="cart-page__title">
+      Your Equipment Bag
+      <span style="color:var(--color-on-surface-variant);font-weight:400;">({{ cart.item_count }})</span>
+    </h1>
+
+    <div class="cart-layout">
+
+      <!-- Left: Cart Items + Instructions -->
+      <div>
+        <div class="cart-table">
+          <!-- Table Header (desktop) -->
+          <div class="cart-table__header">
+            <div>Product</div>
+            <div class="cart-table__header-price">Price</div>
+            <div class="cart-table__header-qty">Quantity</div>
+            <div class="cart-table__header-total">Total</div>
+          </div>
+
+          <!-- Cart Items -->
+          {%- for item in cart.items -%}
+            <div class="cart-item" id="CartItem-{{ item.index | plus: 1 }}">
+
+              <!-- Product column -->
+              <div class="cart-item__product">
+                <div class="cart-item__image">
+                  {%- if item.image -%}
+                    {{
+                      item.image
+                      | image_url: width: 256
+                      | image_tag: loading: 'lazy', alt: item.product.title | escape
+                    }}
+                  {%- else -%}
+                    {{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </div>
+                <div class="cart-item__details">
+                  {%- if item.product.type != blank -%}
+                    <span class="cart-item__type">{{ item.product.type | upcase }}</span>
+                  {%- endif -%}
+                  <h3 class="cart-item__title">
+                    <a href="{{ item.url }}">{{ item.product.title }}</a>
+                  </h3>
+                  {%- unless item.variant.title == 'Default Title' -%}
+                    <p class="cart-item__variant">{{ item.variant.title }}</p>
+                  {%- endunless -%}
+                  <button
+                    class="cart-item__remove"
+                    type="button"
+                    data-remove-item
+                    data-item-key="{{ item.key }}"
+                    aria-label="Remove {{ item.product.title | escape }}"
+                  >
+                    <span class="material-symbols-outlined" style="font-size:16px;" aria-hidden="true">delete</span>
+                    REMOVE
+                  </button>
+                </div>
+              </div>
+
+              <!-- Price column -->
+              <div class="cart-item__price-col">
+                <span class="cart-item__price-label">Price</span>
+                <span class="cart-item__price">{{ item.price | money }}</span>
+              </div>
+
+              <!-- Quantity column -->
+              <div class="cart-item__qty-col">
+                <div class="qty-stepper">
+                  <button
+                    class="qty-stepper__btn"
+                    type="button"
+                    data-qty-minus
+                    data-item-key="{{ item.key }}"
+                    data-current-qty="{{ item.quantity }}"
+                    aria-label="Decrease quantity"
+                  >
+                    <span class="material-symbols-outlined" style="font-size:18px;" aria-hidden="true">remove</span>
+                  </button>
+                  <input
+                    class="qty-stepper__input"
+                    type="text"
+                    value="{{ item.quantity }}"
+                    data-qty-input
+                    data-item-key="{{ item.key }}"
+                    aria-label="Quantity for {{ item.product.title | escape }}"
+                    readonly
+                  >
+                  <button
+                    class="qty-stepper__btn"
+                    type="button"
+                    data-qty-plus
+                    data-item-key="{{ item.key }}"
+                    data-current-qty="{{ item.quantity }}"
+                    aria-label="Increase quantity"
+                  >
+                    <span class="material-symbols-outlined" style="font-size:18px;" aria-hidden="true">add</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Line total column -->
+              <div class="cart-item__total-col">
+                <span class="cart-item__price-label">Total</span>
+                <span class="cart-item__price" data-line-price data-item-key="{{ item.key }}">
+                  {{ item.line_price | money }}
+                </span>
+              </div>
+
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <!-- Special Instructions -->
+        {%- if section.settings.show_note -%}
+          <div class="cart-instructions">
+            <label class="cart-instructions__title" for="CartNote">
+              {{ section.settings.note_label | default: 'SPECIAL INSTRUCTIONS' }}
+            </label>
+            <textarea
+              class="cart-instructions__textarea"
+              id="CartNote"
+              name="note"
+              placeholder="{{ section.settings.note_placeholder | default: 'Add a note about your order...' }}"
+            >{{ cart.note }}</textarea>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Right: Order Summary -->
+      <div class="cart-summary">
+        <h2 class="cart-summary__title">Order Summary</h2>
+
+        <!-- Promo Code -->
+        {%- if section.settings.show_promo -%}
+          <div class="cart-promo">
+            <span class="cart-promo__label">Promo Code</span>
+            <div class="cart-promo__row">
+              <input
+                class="cart-promo__input"
+                type="text"
+                id="PromoCode"
+                placeholder="{{ section.settings.promo_placeholder | default: 'ENTER CODE' }}"
+                aria-label="Promo code"
+              >
+              <button class="cart-promo__btn" type="button" id="PromoApply">Apply</button>
+            </div>
+            <p style="font-size:12px;color:var(--color-on-surface-variant);margin-top:8px;">
+              Discount codes are applied at checkout.
+            </p>
+          </div>
+        {%- endif -%}
+
+        <!-- Totals -->
+        <div class="cart-summary__row">
+          <span class="cart-summary__row-label">Subtotal</span>
+          <span class="cart-summary__row-value js-cart-subtotal">{{ cart.total_price | money }}</span>
+        </div>
+        <div class="cart-summary__row">
+          <span class="cart-summary__row-label">Shipping</span>
+          <span class="cart-summary__row-value">Calculated at checkout</span>
+        </div>
+        <div class="cart-summary__row cart-summary__row--total">
+          <span class="cart-summary__row-label">Total</span>
+          <span class="cart-summary__row-value js-cart-total">{{ cart.total_price | money }}</span>
+        </div>
+
+        <p class="cart-summary__shipping-note">
+          <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;" aria-hidden="true">local_shipping</span>
+          Free shipping on orders over $150
+        </p>
+
+        <!-- Checkout -->
+        <a class="cart-checkout-btn" href="{{ routes.cart_url }}/checkout">
+          <span class="material-symbols-outlined" style="font-size:20px;vertical-align:middle;margin-right:8px;" aria-hidden="true">lock</span>
+          PROCEED TO CHECKOUT
+        </a>
+
+        <a class="cart-continue-btn" href="{{ routes.collections_url }}">
+          CONTINUE SHOPPING
+        </a>
+
+        <!-- Trust Badges -->
+        <div class="cart-trust">
+          <div class="cart-trust__item">
+            <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
+            <span>100% Secure Checkout</span>
+          </div>
+          <div class="cart-trust__item">
+            <span class="material-symbols-outlined" aria-hidden="true">local_shipping</span>
+            <span>Express USA Shipping</span>
+          </div>
+          <div class="cart-trust__item">
+            <span class="material-symbols-outlined" aria-hidden="true">autorenew</span>
+            <span>Easy 30-Day Returns</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  {%- else -%}
+    <!-- Empty Cart -->
+    <div class="cart-empty">
+      <div class="cart-empty__icon">
+        <span class="material-symbols-outlined" style="font-size:80px;color:var(--color-outline-variant);" aria-hidden="true">shopping_cart</span>
+      </div>
+      <h1 class="cart-empty__title">Your cart is empty</h1>
+      <p class="cart-empty__desc">Looks like you haven't added any gear yet.</p>
+      <a class="btn btn-primary" href="{{ routes.collections_url }}" style="font-size:16px;padding:14px 32px;">
+        SHOP ALL GEAR
+      </a>
+    </div>
+  {%- endif -%}
+
+</div>
+
+<script>
+(function () {
+  const cartPage = document.querySelector('.cart-page');
+  if (!cartPage) return;
+
+  async function changeItem(key, quantity) {
+    try {
+      const res = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: key, quantity: quantity })
+      });
+      const cart = await res.json();
+      updateCartDisplay(cart);
+    } catch (e) {
+      window.location.reload();
+    }
+  }
+
+  function updateCartDisplay(cart) {
+    // update subtotal + total
+    const fmt = (cents) => '$' + (cents / 100).toFixed(2);
+    document.querySelectorAll('.js-cart-subtotal, .js-cart-total').forEach(el => {
+      el.textContent = fmt(cart.total_price);
+    });
+    // update per-line prices + qty inputs
+    cart.items.forEach(item => {
+      const lineEl = document.querySelector('[data-line-price][data-item-key="' + item.key + '"]');
+      if (lineEl) lineEl.textContent = fmt(item.line_price);
+      const qtyEl = document.querySelector('[data-qty-input][data-item-key="' + item.key + '"]');
+      if (qtyEl) qtyEl.value = item.quantity;
+    });
+    // update cart count badge in header
+    document.querySelectorAll('.js-cart-count').forEach(el => {
+      el.textContent = cart.item_count;
+      el.style.display = cart.item_count > 0 ? 'flex' : 'none';
+    });
+    // reload page if item removed (simplest for now)
+    if (cart.item_count < document.querySelectorAll('.cart-item').length) {
+      window.location.reload();
+    }
+  }
+
+  // Minus buttons
+  cartPage.querySelectorAll('[data-qty-minus]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.itemKey;
+      const current = parseInt(btn.dataset.currentQty);
+      if (current > 1) {
+        btn.dataset.currentQty = current - 1;
+        const plus = cartPage.querySelector('[data-qty-plus][data-item-key="' + key + '"]');
+        if (plus) plus.dataset.currentQty = current - 1;
+        changeItem(key, current - 1);
+      } else {
+        changeItem(key, 0);
+      }
+    });
+  });
+
+  // Plus buttons
+  cartPage.querySelectorAll('[data-qty-plus]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.itemKey;
+      const current = parseInt(btn.dataset.currentQty);
+      btn.dataset.currentQty = current + 1;
+      const minus = cartPage.querySelector('[data-qty-minus][data-item-key="' + key + '"]');
+      if (minus) minus.dataset.currentQty = current + 1;
+      changeItem(key, current + 1);
+    });
+  });
+
+  // Remove buttons
+  cartPage.querySelectorAll('[data-remove-item]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.textContent = 'Removing...';
+      changeItem(btn.dataset.itemKey, 0);
+    });
+  });
+
+  // Promo code redirect to checkout with discount
+  const promoApply = document.getElementById('PromoApply');
+  if (promoApply) {
+    promoApply.addEventListener('click', () => {
+      const code = document.getElementById('PromoCode')?.value?.trim();
+      if (code) {
+        window.location.href = '/checkout?discount=' + encodeURIComponent(code);
+      }
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_note",
+      "label": "Show order note field",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "note_label",
+      "label": "Note field label",
+      "default": "SPECIAL INSTRUCTIONS"
+    },
+    {
+      "type": "text",
+      "id": "note_placeholder",
+      "label": "Note placeholder text",
+      "default": "Add a note about your order (e.g., gift message, bat oiling request)..."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promo",
+      "label": "Show promo code field",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "promo_placeholder",
+      "label": "Promo code placeholder",
+      "default": "ENTER CODE"
+    }
+  ]
+}
+{% endschema %}
