@@ -8,16 +8,8 @@
  * ------------------------------------------------------------
  */
 {
-  "sections": {
-    "main": {
-      "type": "main-list-collections",
-      "settings": {
-        "eyebrow": "SHOP BY CATEGORY",
-        "title": "ALL COLLECTIONS",
-        "subtitle": "Browse our full range of professional cricket equipment.",
-        "collections_per_page": 12
-      }
-    }
-  },
-  "order": ["main"]
+  "name": "collection",
+  "type": "header",
+  "sections": {},
+  "order": []
 }
