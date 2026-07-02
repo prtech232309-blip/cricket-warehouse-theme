@@ -39,7 +39,7 @@
             "image": "shopify://shop_images/bats.png",
             "name": "BATS",
             "sub": "ELITE WILLOW",
-            "url": "/search?q=cricket+bat&type=product"
+            "url": "/collections/bats"
           }
         },
         "cat-balls": {
@@ -48,7 +48,7 @@
             "image": "shopify://shop_images/balls.png",
             "name": "BALLS",
             "sub": "PRACTICE & MATCH",
-            "url": "/search?q=cricket+ball&type=product"
+            "url": "/collections/balls"
           }
         },
         "cat-protection": {
@@ -57,7 +57,7 @@
             "image": "shopify://shop_images/protection.png",
             "name": "PROTECTION",
             "sub": "SOFT LEATHER",
-            "url": "/search?q=batting+pads&type=product"
+            "url": "/collections/protection"
           }
         },
         "cat-kitbags": {
@@ -66,7 +66,7 @@
             "image": "shopify://shop_images/kitbags.png",
             "name": "KITBAGS",
             "sub": "HEAVY DUTY",
-            "url": "/collections"
+            "url": "/collections/kitbags"
           }
         }
       },
