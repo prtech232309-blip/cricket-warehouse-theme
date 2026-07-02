@@ -1,0 +1,118 @@
+<div class="list-collections-page">
+
+  <!-- Header -->
+  <div class="list-collections-page__header">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="list-collections-page__eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h1 class="list-collections-page__title">{{ section.settings.title }}</h1>
+    {%- if section.settings.subtitle != blank -%}
+      <p class="list-collections-page__subtitle">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+  </div>
+
+  <!-- Collections Grid -->
+  {%- paginate collections by section.settings.collections_per_page -%}
+    <div class="list-collections-grid">
+      {%- for collection in collections -%}
+        {%- unless collection.handle == 'frontpage' -%}
+          <a href="{{ collection.url }}" class="coll-card" aria-label="{{ collection.title }}">
+            <div class="coll-card__image-wrap">
+              {%- if collection.image != blank -%}
+                {{
+                  collection.image
+                  | image_url: width: 800
+                  | image_tag:
+                    loading: 'lazy',
+                    alt: collection.image.alt | default: collection.title | escape
+                }}
+              {%- elsif collection.products.first.featured_image != blank -%}
+                {{
+                  collection.products.first.featured_image
+                  | image_url: width: 800
+                  | image_tag:
+                    loading: 'lazy',
+                    alt: collection.title | escape
+                }}
+              {%- else -%}
+                {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+              <div class="coll-card__overlay"></div>
+              <div class="coll-card__content">
+                <span class="coll-card__title">{{ collection.title }}</span>
+                <span class="coll-card__count">{{ collection.products_count }} Products</span>
+                <span class="coll-card__cta">
+                  Shop Now
+                  <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                </span>
+              </div>
+            </div>
+          </a>
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      <nav class="collection-pagination" aria-label="Collections pagination">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" aria-label="Previous page">
+            <span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+          </a>
+        {%- endif -%}
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}
+            <a href="{{ part.url }}">{{ part.title }}</a>
+          {%- else -%}
+            <span {% if part.title == paginate.current_page %}class="current" aria-current="page"{% endif %}>{{ part.title }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" aria-label="Next page">
+            <span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+          </a>
+        {%- endif -%}
+      </nav>
+    {%- endif -%}
+  {%- endpaginate -%}
+
+</div>
+
+{% schema %}
+{
+  "name": "All Collections",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "SHOP BY CATEGORY"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Page title",
+      "default": "ALL COLLECTIONS"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Browse our full range of professional cricket equipment."
+    },
+    {
+      "type": "range",
+      "id": "collections_per_page",
+      "label": "Collections per page",
+      "min": 6,
+      "max": 24,
+      "step": 3,
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "All Collections"
+    }
+  ]
+}
+{% endschema %}

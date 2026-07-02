@@ -18,7 +18,7 @@
         "heading_line2": "BEYOND PERFORMANCE.",
         "subtext": "Elevate your game with the exact equipment used by the world's leading cricketers. Engineered for precision, built for power.",
         "cta_primary_text": "SHOP THE COLLECTION",
-        "cta_primary_url": "shopify://collections",
+        "cta_primary_url": "/collections",
         "cta_secondary_text": "VIEW LIFESTYLE",
         "cta_secondary_url": "",
         "show_stats": true,
@@ -39,7 +39,7 @@
             "image": "shopify://shop_images/bats.png",
             "name": "BATS",
             "sub": "ELITE WILLOW",
-            "url": "shopify://collections/bats"
+            "url": "/collections/all?filter.p.product_type=Cricket+Bat"
           }
         },
         "cat-balls": {
@@ -48,7 +48,7 @@
             "image": "shopify://shop_images/balls.png",
             "name": "BALLS",
             "sub": "PRACTICE & MATCH",
-            "url": "shopify://collections/balls"
+            "url": "/collections/all?filter.p.product_type=Cricket+Ball"
           }
         },
         "cat-protection": {
@@ -57,7 +57,7 @@
             "image": "shopify://shop_images/protection.png",
             "name": "PROTECTION",
             "sub": "SOFT LEATHER",
-            "url": ""
+            "url": "/collections/all?filter.p.product_type=Batting+Pads"
           }
         },
         "cat-kitbags": {
@@ -66,7 +66,7 @@
             "image": "shopify://shop_images/kitbags.png",
             "name": "KITBAGS",
             "sub": "HEAVY DUTY",
-            "url": ""
+            "url": "/collections/all"
           }
         }
       },
@@ -78,7 +78,7 @@
       ],
       "settings": {
         "title": "TRENDING CATEGORIES",
-        "view_all_url": "",
+        "view_all_url": "/collections/all",
         "view_all_text": "VIEW ALL GEAR"
       }
     },
