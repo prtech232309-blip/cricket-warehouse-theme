@@ -1715,6 +1715,126 @@ input, select, textarea { font-family: inherit; }
   }
 }
 
+/* All Collections */
+.list-collections-page {
+  max-width: var(--space-container-max);
+  margin: 0 auto;
+  padding: 48px var(--space-margin-mobile) 80px;
+}
+@media (min-width: 768px) {
+  .list-collections-page {
+    padding: 64px var(--space-gutter) 96px;
+  }
+}
+
+.list-collections-page__header {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+.list-collections-page__eyebrow {
+  display: block;
+  margin-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+.list-collections-page__title {
+  font-family: var(--font-heading);
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 48px;
+  text-transform: uppercase;
+  color: var(--color-deep-navy);
+}
+.list-collections-page__subtitle {
+  margin-top: 12px;
+  color: var(--color-on-surface-variant);
+  font-size: 16px;
+  line-height: 24px;
+}
+.list-collections-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+@media (min-width: 640px) {
+  .list-collections-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .list-collections-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.coll-card {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--color-outline-variant);
+  background: var(--color-stadium-white);
+  color: inherit;
+}
+.coll-card__image-wrap {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-deep-navy);
+}
+.coll-card__image-wrap img,
+.coll-card__image-wrap svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.coll-card:hover .coll-card__image-wrap img,
+.coll-card:hover .coll-card__image-wrap svg {
+  transform: scale(1.04);
+}
+.coll-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 31, 63, 0.05), rgba(0, 31, 63, 0.82));
+}
+.coll-card__content {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
+  padding: 20px;
+  color: var(--color-stadium-white);
+}
+.coll-card__title {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 32px;
+  text-transform: uppercase;
+}
+.coll-card__count {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-performance-lime);
+}
+.coll-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 /* Sidebar */
 .collection-sidebar {
   width: 100%;

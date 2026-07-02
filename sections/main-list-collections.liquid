@@ -5,7 +5,7 @@
     {%- if section.settings.eyebrow != blank -%}
       <span class="list-collections-page__eyebrow">{{ section.settings.eyebrow }}</span>
     {%- endif -%}
-    <h1 class="list-collections-page__title">{{ section.settings.title }}</h1>
+    <h1 class="list-collections-page__title">{{ section.settings.title | default: 'ALL COLLECTIONS' }}</h1>
     {%- if section.settings.subtitle != blank -%}
       <p class="list-collections-page__subtitle">{{ section.settings.subtitle }}</p>
     {%- endif -%}
@@ -13,9 +13,11 @@
 
   <!-- Collections Grid -->
   {%- paginate collections by section.settings.collections_per_page -%}
+    {%- assign visible_collection_count = 0 -%}
     <div class="list-collections-grid">
       {%- for collection in collections -%}
         {%- unless collection.handle == 'frontpage' -%}
+          {%- assign visible_collection_count = visible_collection_count | plus: 1 -%}
           <a href="{{ collection.url }}" class="coll-card" aria-label="{{ collection.title }}">
             <div class="coll-card__image-wrap">
               {%- if collection.image != blank -%}
@@ -50,6 +52,28 @@
           </a>
         {%- endunless -%}
       {%- endfor -%}
+
+      {%- if visible_collection_count == 0 -%}
+        {%- assign fallback_handles = 'bats,balls,protection,kitbags' | split: ',' -%}
+        {%- assign fallback_titles = 'Bats,Balls,Protection,Kitbags' | split: ',' -%}
+        {%- assign fallback_subtitles = 'Elite Willow,Practice & Match,Soft Leather,Heavy Duty' | split: ',' -%}
+        {%- for handle in fallback_handles -%}
+          <a href="/collections/{{ handle }}" class="coll-card" aria-label="{{ fallback_titles[forloop.index0] }}">
+            <div class="coll-card__image-wrap">
+              {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              <div class="coll-card__overlay"></div>
+              <div class="coll-card__content">
+                <span class="coll-card__title">{{ fallback_titles[forloop.index0] }}</span>
+                <span class="coll-card__count">{{ fallback_subtitles[forloop.index0] }}</span>
+                <span class="coll-card__cta">
+                  Shop Now
+                  <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+                </span>
+              </div>
+            </div>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
     </div>
 
     {%- if paginate.pages > 1 -%}
