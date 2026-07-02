@@ -36,22 +36,25 @@
         "cat-bats": {
           "type": "category",
           "settings": {
+            "image": "shopify://shop_images/bats.png",
             "name": "BATS",
             "sub": "ELITE WILLOW",
-            "url": ""
+            "url": "shopify://collections/bats"
           }
         },
         "cat-balls": {
           "type": "category",
           "settings": {
+            "image": "shopify://shop_images/balls.png",
             "name": "BALLS",
             "sub": "PRACTICE & MATCH",
-            "url": ""
+            "url": "shopify://collections/balls"
           }
         },
         "cat-protection": {
           "type": "category",
           "settings": {
+            "image": "shopify://shop_images/protection.png",
             "name": "PROTECTION",
             "sub": "SOFT LEATHER",
             "url": ""
@@ -60,6 +63,7 @@
         "cat-kitbags": {
           "type": "category",
           "settings": {
+            "image": "shopify://shop_images/kitbags.png",
             "name": "KITBAGS",
             "sub": "HEAVY DUTY",
             "url": ""
