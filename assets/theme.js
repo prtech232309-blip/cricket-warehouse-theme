@@ -182,7 +182,7 @@ async function refreshCartDrawer() {
         <div class="cart-drawer__empty">
           <span class="material-symbols-outlined">shopping_bag</span>
           <p>Your bag is empty</p>
-          <a class="btn btn-primary" href="/collections/all" onclick="window.closeCartDrawer && window.closeCartDrawer()" style="font-size:14px;padding:12px 24px;">SHOP NOW</a>
+          <a class="btn btn-primary" href="/collections" onclick="window.closeCartDrawer && window.closeCartDrawer()" style="font-size:14px;padding:12px 24px;">SHOP NOW</a>
         </div>`;
       if (footer) footer.style.display = 'none';
       return;
