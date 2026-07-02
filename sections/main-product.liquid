@@ -415,7 +415,7 @@
       const position = parseInt(btn.dataset.optionPosition) - 1;
       selectedOptions[position] = btn.dataset.optionValue;
 
-      const optionGroup = btn.closest('[data-option-position]');
+      const optionGroup = btn.closest('.product-option__values');
       optionGroup.querySelectorAll('.variant-btn').forEach(b => {
         b.classList.remove('is-selected');
         b.setAttribute('aria-pressed', 'false');
