@@ -107,7 +107,9 @@
             {%- endcase -%}
           {%- endfor -%}
 
-          {%- if current_tags.size > 0 or collection.filters | map: 'active_values' | join: '' != '' -%}
+          {%- assign cwa_active_count = 0 -%}
+          {%- for f in collection.filters -%}{%- assign cwa_active_count = cwa_active_count | plus: f.active_values.size -%}{%- endfor -%}
+          {%- if current_tags.size > 0 or cwa_active_count > 0 -%}
             <a class="filter-clear-btn" href="{{ collection.url }}">Clear All Filters</a>
           {%- endif -%}
         </form>
