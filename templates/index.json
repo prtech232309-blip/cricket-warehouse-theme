@@ -98,7 +98,9 @@
         "title": "THE PAVILION CLUB",
         "description": "Where the game meets the grind. Our premium lifestyle collection designed for the modern cricketer's off-field journey. Sustainable fabrics, technical fits, iconic style.",
         "cta_text": "EXPLORE LIFESTYLE",
-        "cta_url": ""
+        "cta_url": "",
+        "image_left": "shopify://shop_images/p1.png",
+        "image_right": "shopify://shop_images/p2.png"
       }
     },
     "brand-story": {
@@ -126,8 +128,9 @@
         "feature-2"
       ],
       "settings": {
+        "image": "shopify://shop_images/ce.webp",
         "years_number": "25",
-        "years_label": "YEARS OF\nTRUST",
+        "years_label": "YEARS OFTRUST",
         "headline": "CRAFTING EXCELLENCE",
         "description": "Cricket Warehouse USA was born from a singular obsession: to provide American cricketers with the same caliber of equipment found in the legendary pavilions of London and Mumbai.",
         "cta_text": "READ OUR FULL STORY",
@@ -140,36 +143,42 @@
         "ig-1": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/1.png",
             "alt": ""
           }
         },
         "ig-2": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/2.png",
             "alt": ""
           }
         },
         "ig-3": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/3.png",
             "alt": ""
           }
         },
         "ig-4": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/4.png",
             "alt": ""
           }
         },
         "ig-5": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/5.png",
             "alt": ""
           }
         },
         "ig-6": {
           "type": "image",
           "settings": {
+            "image": "shopify://shop_images/6.png",
             "alt": ""
           }
         }
