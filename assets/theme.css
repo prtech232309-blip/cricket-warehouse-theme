@@ -1045,6 +1045,7 @@ input, select, textarea { font-family: inherit; }
 .product-card__wishlist:hover { color: var(--color-sport-red); }
 
 .product-card__image-wrap {
+  display: block;
   aspect-ratio: 4 / 5;
   overflow: hidden;
   position: relative;
