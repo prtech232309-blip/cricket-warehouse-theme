@@ -853,7 +853,7 @@ input, select, textarea { font-family: inherit; }
 .category-card__image-wrap {
   aspect-ratio: 1 / 1;
   background-color: var(--color-pitch-gray);
-  border-radius: 50%;
+  border-radius: 16px;
   overflow: hidden;
   margin-bottom: 16px;
   border: 4px solid transparent;
@@ -883,7 +883,7 @@ input, select, textarea { font-family: inherit; }
   inset: 0;
   background: rgba(0,31,63,0.2);
   transition: background 0.3s;
-  border-radius: 50%;
+  border-radius: 16px;
 }
 .category-card:hover .category-card__overlay { background: rgba(0,31,63,0); }
 
